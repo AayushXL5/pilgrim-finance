@@ -4,221 +4,219 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Finance Reconciliation Dashboard</title>
+<title>Finance Reconciliation</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-html{-webkit-font-smoothing:antialiased;scroll-behavior:smooth}
+html{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;scroll-behavior:smooth}
 
 :root{
-  --font:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;
-  --bg:#0b0b10;
-  --card:#141419;
-  --card-hover:#1a1a22;
-  --border:rgba(255,255,255,.06);
-  --border-hover:rgba(255,255,255,.12);
-  --t1:#f0f0f5;
-  --t2:#a0a0b8;
-  --t3:#606078;
-  --t4:#3a3a4c;
-  --accent:#8b6cf6;
-  --accent-dim:rgba(139,108,246,.1);
-  --g:#22c55e;
-  --g-dim:rgba(34,197,94,.1);
-  --r:#ef4444;
-  --r-dim:rgba(239,68,68,.1);
-  --a:#eab308;
-  --a-dim:rgba(234,179,8,.1);
-  --b:#3b82f6;
-  --b-dim:rgba(59,130,246,.1);
-  --radius:14px;
+  --f:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+  --bg:#09090b;
+  --card:rgba(255,255,255,.03);
+  --card-h:rgba(255,255,255,.05);
+  --glass:rgba(255,255,255,.04);
+  --b1:rgba(255,255,255,.06);
+  --b2:rgba(255,255,255,.1);
+  --t1:#fafafa;
+  --t2:#a1a1aa;
+  --t3:#52525b;
+  --t4:#3f3f46;
+  --accent:#a78bfa;
+  --accent2:#818cf8;
+  --g:#4ade80;
+  --g2:rgba(74,222,128,.08);
+  --r:#f87171;
+  --r2:rgba(248,113,113,.08);
+  --am:#fbbf24;
+  --am2:rgba(251,191,36,.08);
+  --bl:#60a5fa;
+  --rad:16px;
+  --rad-s:10px;
 }
 
-body{font-family:var(--font);background:var(--bg);color:var(--t1);line-height:1.5;min-height:100vh}
+body{font-family:var(--f);background:var(--bg);color:var(--t1);line-height:1.6;min-height:100vh;position:relative;overflow-x:hidden}
 
-/* ── Shell ── */
-.shell{max-width:1320px;margin:0 auto;padding:28px 32px}
+/* subtle gradient orbs */
+body::before,body::after{content:'';position:fixed;border-radius:50%;filter:blur(120px);opacity:.07;pointer-events:none;z-index:0}
+body::before{width:600px;height:600px;background:var(--accent);top:-200px;right:-100px}
+body::after{width:400px;height:400px;background:var(--g);bottom:-100px;left:-50px}
 
-/* ── Top bar ── */
-.topbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:36px;padding-bottom:20px;border-bottom:1px solid var(--border);flex-wrap:wrap;gap:14px}
-.topbar-left{display:flex;align-items:center;gap:12px}
-.topbar-left h1{font-size:17px;font-weight:700;letter-spacing:-.3px}
-.dot{width:7px;height:7px;border-radius:50%;background:var(--g);display:inline-block;margin-right:4px;animation:pulse 2s infinite}
-@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
-.topbar-tag{font-size:11px;color:var(--t3);background:var(--card);border:1px solid var(--border);padding:4px 12px;border-radius:100px;display:flex;align-items:center;gap:5px}
-.topbar-right{display:flex;gap:8px;flex-wrap:wrap}
-.tb{font-size:12px;font-weight:500;color:var(--t2);background:var(--card);border:1px solid var(--border);padding:7px 14px;border-radius:8px;text-decoration:none;transition:all .15s}
-.tb:hover{border-color:var(--accent);color:var(--accent)}
+.shell{max-width:1340px;margin:0 auto;padding:32px;position:relative;z-index:1}
 
-/* ── KPI row ── */
-.kpis{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;margin-bottom:28px}
-.kpi{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:22px 20px;transition:border-color .15s}
-.kpi:hover{border-color:var(--border-hover)}
-.kpi-label{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.8px;color:var(--t3);margin-bottom:10px}
-.kpi-num{font-size:28px;font-weight:800;letter-spacing:-1.5px;line-height:1}
-.kpi-num.is-g{color:var(--g)}.kpi-num.is-r{color:var(--r)}.kpi-num.is-a{color:var(--a)}.kpi-num.is-b{color:var(--b)}.kpi-num.is-p{color:var(--accent)}
-.kpi-foot{font-size:11px;color:var(--t3);margin-top:6px}
+/* ── Nav ── */
+.nav{display:flex;align-items:center;justify-content:space-between;margin-bottom:40px;flex-wrap:wrap;gap:16px}
+.nav-left{display:flex;align-items:center;gap:14px}
+.nav-title{font-size:15px;font-weight:700;letter-spacing:-.2px;color:var(--t2)}
+.nav-title strong{color:var(--t1)}
+.live{display:flex;align-items:center;gap:5px;font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.8px;color:var(--g);background:var(--g2);padding:4px 10px;border-radius:100px}
+.live::before{content:'';width:5px;height:5px;background:var(--g);border-radius:50%;animation:blink 2s infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+.nav-links{display:flex;gap:6px}
+.nl{font-size:11px;font-weight:500;color:var(--t3);padding:6px 14px;border-radius:8px;border:1px solid transparent;text-decoration:none;transition:all .15s}
+.nl:hover{color:var(--t2);border-color:var(--b1);background:var(--glass)}
 
-/* ── Chart grid ── */
-.charts{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:28px}
-.panel{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:24px}
-.panel-head{font-size:13px;font-weight:700;color:var(--t1);margin-bottom:18px;padding-left:12px;border-left:3px solid var(--accent)}
+/* ── KPIs ── */
+.kpis{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:32px}
+.k{background:var(--card);backdrop-filter:blur(20px);border:1px solid var(--b1);border-radius:var(--rad);padding:24px 22px;transition:all .2s}
+.k:hover{background:var(--card-h);border-color:var(--b2);transform:translateY(-1px)}
+.k-label{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.8px;color:var(--t3);margin-bottom:12px}
+.k-val{font-size:30px;font-weight:800;letter-spacing:-1.5px;line-height:1;font-variant-numeric:tabular-nums}
+.k-val.c-g{color:var(--g)}.k-val.c-r{color:var(--r)}.k-val.c-am{color:var(--am)}.k-val.c-ac{color:var(--accent)}.k-val.c-bl{color:var(--bl)}
+.k-sub{font-size:11px;color:var(--t3);margin-top:8px;line-height:1.3}
+
+/* ── Panels ── */
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}
+.p{background:var(--card);backdrop-filter:blur(20px);border:1px solid var(--b1);border-radius:var(--rad);padding:24px;transition:border-color .15s}
+.p:hover{border-color:var(--b2)}
+.p-title{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--t2);margin-bottom:20px;display:flex;align-items:center;gap:8px}
+.p-title::before{content:'';width:3px;height:14px;border-radius:2px;background:var(--accent)}
 
 /* ── Tables ── */
-.tbl-wrap{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:24px;margin-bottom:28px;overflow-x:auto}
+.tbl{background:var(--card);backdrop-filter:blur(20px);border:1px solid var(--b1);border-radius:var(--rad);padding:24px;margin-bottom:12px;overflow-x:auto}
 table{width:100%;border-collapse:collapse}
-th{text-align:left;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--t4);padding:8px 10px;border-bottom:1px solid var(--border)}
-td{font-size:12px;color:var(--t2);padding:11px 10px;border-bottom:1px solid rgba(255,255,255,.025)}
-tr:hover td{background:rgba(255,255,255,.015);color:var(--t1)}
-.pill{font-size:9px;font-weight:700;padding:3px 8px;border-radius:4px;display:inline-block}
-.pill-g{background:var(--g-dim);color:var(--g)}
-.pill-r{background:var(--r-dim);color:var(--r)}
-.pill-a{background:var(--a-dim);color:var(--a)}
-.amt-r{font-weight:700;color:var(--r);font-variant-numeric:tabular-nums}
-.amt-a{font-weight:700;color:var(--a);font-variant-numeric:tabular-nums}
+th{text-align:left;font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--t4);padding:8px 10px;border-bottom:1px solid var(--b1)}
+td{font-size:12px;color:var(--t2);padding:12px 10px;border-bottom:1px solid rgba(255,255,255,.02);font-variant-numeric:tabular-nums}
+tr:hover td{color:var(--t1);background:rgba(255,255,255,.01)}
+.tag{font-size:9px;font-weight:700;letter-spacing:.3px;padding:3px 8px;border-radius:5px;display:inline-block;text-transform:uppercase}
+.tag-r{background:var(--r2);color:var(--r)}.tag-am{background:var(--am2);color:var(--am)}.tag-g{background:var(--g2);color:var(--g)}
+td.mono{font-weight:700;font-variant-numeric:tabular-nums}
 
 /* ── Upload ── */
-.upload-wrap{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:32px;margin-bottom:28px}
-.upload-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:16px}
-.drop{border:1.5px dashed var(--border);border-radius:10px;padding:28px 16px;text-align:center;cursor:pointer;transition:all .15s}
-.drop:hover{border-color:var(--accent);background:var(--accent-dim)}
-.drop-title{font-size:12px;font-weight:600;color:var(--t2);margin-bottom:2px}
-.drop-sub{font-size:11px;color:var(--t3)}
-.drop-status{font-size:11px;margin-top:8px}
-.act-btn{font-size:12px;font-weight:600;color:#fff;background:var(--accent);border:none;padding:9px 20px;border-radius:8px;cursor:pointer;margin-top:16px;transition:opacity .15s}
-.act-btn:hover{opacity:.85}
-.act-btn:disabled{opacity:.4;cursor:not-allowed}
+.up-wrap{background:var(--card);backdrop-filter:blur(20px);border:1px solid var(--b1);border-radius:var(--rad);padding:32px;margin-bottom:12px}
+.up-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px}
+.drop{border:1.5px dashed var(--b1);border-radius:var(--rad-s);padding:24px 16px;text-align:center;cursor:pointer;transition:all .15s}
+.drop:hover{border-color:var(--accent);background:rgba(167,139,250,.04)}
+.drop-t{font-size:12px;font-weight:600;color:var(--t2)}.drop-s{font-size:10px;color:var(--t3);margin-top:2px}
+.drop-st{font-size:11px;margin-top:6px}
+.btn-go{font-size:12px;font-weight:600;color:#fff;background:linear-gradient(135deg,var(--accent),var(--accent2));border:none;padding:10px 24px;border-radius:var(--rad-s);cursor:pointer;margin-top:18px;transition:opacity .15s;letter-spacing:-.2px}
+.btn-go:hover{opacity:.85}.btn-go:disabled{opacity:.3;cursor:not-allowed}
 
 /* ── Empty ── */
-.empty{text-align:center;padding:80px 20px}
-.empty h2{font-size:22px;font-weight:800;margin-bottom:6px}
-.empty p{font-size:13px;color:var(--t3);max-width:420px;margin:0 auto 28px;line-height:1.7}
+.empty{text-align:center;padding:100px 20px}
+.empty h2{font-size:24px;font-weight:800;letter-spacing:-.5px;margin-bottom:8px}
+.empty p{font-size:13px;color:var(--t3);max-width:440px;margin:0 auto 32px;line-height:1.7}
 
 /* ── Footer ── */
-.foot{text-align:center;padding:28px 0;border-top:1px solid var(--border);margin-top:40px;font-size:11px;color:var(--t4)}
+.foot{text-align:center;padding:32px 0;margin-top:48px;font-size:10px;color:var(--t4);letter-spacing:.3px}
 .foot a{color:var(--t3);text-decoration:none}.foot a:hover{color:var(--accent)}
 
 /* ── Responsive ── */
-@media(max-width:960px){.kpis{grid-template-columns:repeat(3,1fr)}.charts{grid-template-columns:1fr}.upload-grid{grid-template-columns:1fr}}
-@media(max-width:600px){.kpis{grid-template-columns:1fr 1fr}.shell{padding:20px 16px}.topbar{flex-direction:column;align-items:flex-start}}
+@media(max-width:1024px){.kpis{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:768px){.kpis{grid-template-columns:repeat(2,1fr)}.grid-2,.up-grid{grid-template-columns:1fr}.shell{padding:20px 16px}}
+@media(max-width:480px){.kpis{grid-template-columns:1fr}.nav{flex-direction:column;align-items:flex-start}}
 </style>
 </head>
 <body>
 
 <div class="shell">
 
-<div class="topbar">
-  <div class="topbar-left">
-    <h1>Reconciliation Dashboard</h1>
-    {% if has_data %}
-    <span class="topbar-tag"><span class="dot"></span>Live</span>
-    {% else %}
-    <span class="topbar-tag" style="color:var(--a)">No data</span>
-    {% endif %}
+<nav class="nav">
+  <div class="nav-left">
+    <div class="nav-title"><strong>Reconciliation</strong>&nbsp;Dashboard</div>
+    {% if has_data %}<span class="live">Live</span>{% endif %}
   </div>
-  <div class="topbar-right">
-    <a href="/api/docs/" class="tb" target="_blank">API Docs</a>
-    <a href="/api/export/powerbi/" class="tb">Export CSV</a>
-    <a href="/admin/" class="tb">Admin</a>
+  <div class="nav-links">
+    <a href="/api/docs/" class="nl" target="_blank">API Docs</a>
+    <a href="/api/export/powerbi/" class="nl">Export</a>
+    <a href="/admin/" class="nl">Admin</a>
   </div>
-</div>
+</nav>
 
 {% if not has_data %}
-
 <div class="empty">
   <h2>Upload your data</h2>
-  <p>Drop your bank statement and internal ledger CSVs below. The engine will match transactions, score confidence, flag anomalies, and build a unified ledger automatically.</p>
+  <p>Drop your bank statement and internal ledger CSVs. The engine matches transactions, scores confidence, flags anomalies, and builds a unified ledger.</p>
 </div>
-
-<div class="upload-wrap">
-  <div class="upload-grid">
+<div class="up-wrap">
+  <div class="up-grid">
     <div>
-      <div class="drop" onclick="document.getElementById('f-bank').click()" id="z-bank">
-        <div class="drop-title">bank_statement.csv</div>
-        <div class="drop-sub">date, narration, amount, type</div>
+      <div class="drop" onclick="document.getElementById('f1').click()" id="z1">
+        <div class="drop-t">bank_statement.csv</div>
+        <div class="drop-s">date, narration, amount, type</div>
       </div>
-      <input type="file" id="f-bank" accept=".csv" style="display:none" onchange="upload(this,'bank')">
-      <div class="drop-status" id="s-bank"></div>
+      <input type="file" id="f1" accept=".csv" style="display:none" onchange="up(this,'bank')">
+      <div class="drop-st" id="s1"></div>
     </div>
     <div>
-      <div class="drop" onclick="document.getElementById('f-ledger').click()" id="z-ledger">
-        <div class="drop-title">internal_ledger.csv</div>
-        <div class="drop-sub">date, description, amount, category</div>
+      <div class="drop" onclick="document.getElementById('f2').click()" id="z2">
+        <div class="drop-t">internal_ledger.csv</div>
+        <div class="drop-s">date, description, amount, category</div>
       </div>
-      <input type="file" id="f-ledger" accept=".csv" style="display:none" onchange="upload(this,'ledger')">
-      <div class="drop-status" id="s-ledger"></div>
+      <input type="file" id="f2" accept=".csv" style="display:none" onchange="up(this,'ledger')">
+      <div class="drop-st" id="s2"></div>
     </div>
   </div>
-  <button class="act-btn" id="run-btn" onclick="reconcile()" disabled>Run Reconciliation</button>
+  <button class="btn-go" id="go" onclick="recon()" disabled>Run Reconciliation</button>
 </div>
 
 {% else %}
 
 <div class="kpis">
-  <div class="kpi">
-    <div class="kpi-label">Total Credits</div>
-    <div class="kpi-num is-g" id="v-credits">{{ credits|floatformat:0 }}</div>
-    <div class="kpi-foot">Incoming</div>
+  <div class="k">
+    <div class="k-label">Total Credits</div>
+    <div class="k-val c-g" data-fmt="{{ credits|floatformat:0 }}"></div>
+    <div class="k-sub">Incoming</div>
   </div>
-  <div class="kpi">
-    <div class="kpi-label">Total Debits</div>
-    <div class="kpi-num is-r" id="v-debits">{{ debits|floatformat:0 }}</div>
-    <div class="kpi-foot">Outgoing</div>
+  <div class="k">
+    <div class="k-label">Total Debits</div>
+    <div class="k-val c-r" data-fmt="{{ debits|floatformat:0 }}"></div>
+    <div class="k-sub">Outgoing</div>
   </div>
-  <div class="kpi">
-    <div class="kpi-label">Net Position</div>
-    <div class="kpi-num {% if net >= 0 %}is-g{% else %}is-r{% endif %}" id="v-net">{{ net|floatformat:0 }}</div>
-    <div class="kpi-foot">Credits minus debits</div>
+  <div class="k">
+    <div class="k-label">Net Position</div>
+    <div class="k-val {% if net >= 0 %}c-g{% else %}c-r{% endif %}" data-fmt="{{ net|floatformat:0 }}"></div>
+    <div class="k-sub">Credits &minus; Debits</div>
   </div>
-  <div class="kpi">
-    <div class="kpi-label">Match Rate</div>
-    <div class="kpi-num is-p">{{ match_rate }}%</div>
-    <div class="kpi-foot">{{ matched }} matched, {{ probable }} probable</div>
+  <div class="k">
+    <div class="k-label">Match Rate</div>
+    <div class="k-val c-ac">{{ match_rate }}%</div>
+    <div class="k-sub">{{ matched }} matched, {{ probable }} probable</div>
   </div>
-  <div class="kpi">
-    <div class="kpi-label">Unmatched</div>
-    <div class="kpi-num is-a" id="v-unmatched">{{ unmatched_amount|floatformat:0 }}</div>
-    <div class="kpi-foot">{{ unmatched }} entries, {{ anomaly_count }} anomalies</div>
+  <div class="k">
+    <div class="k-label">Unmatched</div>
+    <div class="k-val c-am" data-fmt="{{ unmatched_amount|floatformat:0 }}"></div>
+    <div class="k-sub">{{ unmatched }} entries &middot; {{ anomaly_count }} anomalies</div>
   </div>
 </div>
 
-<div class="charts">
-  <div class="panel">
-    <div class="panel-head">Expenses by Category</div>
-    <canvas id="c-cat" height="280"></canvas>
+<div class="grid-2">
+  <div class="p">
+    <div class="p-title">Expenses by Category</div>
+    <canvas id="c1" height="300"></canvas>
   </div>
-  <div class="panel">
-    <div class="panel-head">Daily Cashflow</div>
-    <canvas id="c-flow" height="280"></canvas>
+  <div class="p">
+    <div class="p-title">Daily Cashflow</div>
+    <canvas id="c2" height="300"></canvas>
   </div>
 </div>
-<div class="charts">
-  <div class="panel">
-    <div class="panel-head">Reconciliation Breakdown</div>
-    <canvas id="c-recon" height="240"></canvas>
+<div class="grid-2">
+  <div class="p">
+    <div class="p-title">Reconciliation Breakdown</div>
+    <canvas id="c3" height="250"></canvas>
   </div>
-  <div class="panel">
-    <div class="panel-head">Spend Distribution</div>
-    <canvas id="c-pie" height="240"></canvas>
+  <div class="p">
+    <div class="p-title">Spend Distribution</div>
+    <canvas id="c4" height="250"></canvas>
   </div>
 </div>
 
 {% if top_unmatched %}
-<div class="tbl-wrap">
-  <div class="panel-head">Unmatched Transactions</div>
+<div class="tbl">
+  <div class="p-title">Unmatched Transactions</div>
   <table>
     <thead><tr><th>Date</th><th>Source</th><th>Narration</th><th>Category</th><th>Amount</th><th>Status</th></tr></thead>
     <tbody>
     {% for e in top_unmatched %}
     <tr>
       <td>{{ e.date|date:"d M" }}</td>
-      <td style="text-transform:uppercase;font-size:10px;font-weight:600;letter-spacing:.5px">{{ e.source }}</td>
-      <td>{{ e.narration|truncatechars:45 }}</td>
-      <td>{{ e.category }}</td>
-      <td class="amt-r">{{ e.amount|floatformat:0 }}</td>
-      <td><span class="pill pill-r">Unmatched</span></td>
+      <td style="font-size:9px;font-weight:700;letter-spacing:.5px;text-transform:uppercase">{{ e.source }}</td>
+      <td>{{ e.narration|truncatechars:40 }}</td>
+      <td style="color:var(--t3)">{{ e.category }}</td>
+      <td class="mono" style="color:var(--r)" data-fmt="{{ e.amount|floatformat:0 }}"></td>
+      <td><span class="tag tag-r">Unmatched</span></td>
     </tr>
     {% endfor %}
     </tbody>
@@ -227,18 +225,18 @@ tr:hover td{background:rgba(255,255,255,.015);color:var(--t1)}
 {% endif %}
 
 {% if anomalies %}
-<div class="tbl-wrap">
-  <div class="panel-head">Flagged Anomalies</div>
+<div class="tbl">
+  <div class="p-title">Flagged Anomalies</div>
   <table>
-    <thead><tr><th>Date</th><th>Source</th><th>Narration</th><th>Amount</th><th>Flag</th></tr></thead>
+    <thead><tr><th>Date</th><th>Source</th><th>Narration</th><th>Amount</th><th>Reason</th></tr></thead>
     <tbody>
     {% for e in anomalies %}
     <tr>
       <td>{{ e.date|date:"d M" }}</td>
-      <td style="text-transform:uppercase;font-size:10px;font-weight:600;letter-spacing:.5px">{{ e.source }}</td>
-      <td>{{ e.narration|truncatechars:45 }}</td>
-      <td class="amt-a">{{ e.amount|floatformat:0 }}</td>
-      <td><span class="pill pill-a">{{ e.anomaly_reason|truncatechars:50 }}</span></td>
+      <td style="font-size:9px;font-weight:700;letter-spacing:.5px;text-transform:uppercase">{{ e.source }}</td>
+      <td>{{ e.narration|truncatechars:40 }}</td>
+      <td class="mono" style="color:var(--am)" data-fmt="{{ e.amount|floatformat:0 }}"></td>
+      <td><span class="tag tag-am">{{ e.anomaly_reason|truncatechars:45 }}</span></td>
     </tr>
     {% endfor %}
     </tbody>
@@ -246,92 +244,72 @@ tr:hover td{background:rgba(255,255,255,.015);color:var(--t1)}
 </div>
 {% endif %}
 
-<div class="upload-wrap">
-  <div class="panel-head">Re-upload & Reconcile</div>
-  <div style="font-size:12px;color:var(--t3);margin-bottom:14px">Duplicates are skipped automatically. {{ bank_count }} bank + {{ internal_count }} internal entries loaded.</div>
-  <div class="upload-grid">
+<div class="up-wrap">
+  <div class="p-title">Re-upload & Reconcile</div>
+  <div style="font-size:11px;color:var(--t3);margin-bottom:10px">Duplicates skipped automatically. {{ bank_count }} bank + {{ internal_count }} internal entries loaded.</div>
+  <div class="up-grid">
     <div>
-      <div class="drop" onclick="document.getElementById('f-bank2').click()">
-        <div class="drop-title">bank_statement.csv</div>
-      </div>
-      <input type="file" id="f-bank2" accept=".csv" style="display:none" onchange="upload(this,'bank')">
-      <div class="drop-status" id="s-bank2"></div>
+      <div class="drop" onclick="document.getElementById('f3').click()"><div class="drop-t">bank_statement.csv</div></div>
+      <input type="file" id="f3" accept=".csv" style="display:none" onchange="up(this,'bank')">
+      <div class="drop-st" id="s3"></div>
     </div>
     <div>
-      <div class="drop" onclick="document.getElementById('f-ledger2').click()">
-        <div class="drop-title">internal_ledger.csv</div>
-      </div>
-      <input type="file" id="f-ledger2" accept=".csv" style="display:none" onchange="upload(this,'ledger')">
-      <div class="drop-status" id="s-ledger2"></div>
+      <div class="drop" onclick="document.getElementById('f4').click()"><div class="drop-t">internal_ledger.csv</div></div>
+      <input type="file" id="f4" accept=".csv" style="display:none" onchange="up(this,'ledger')">
+      <div class="drop-st" id="s4"></div>
     </div>
   </div>
-  <button class="act-btn" onclick="reconcile()">Re-run Reconciliation</button>
+  <button class="btn-go" onclick="recon()">Re-run Reconciliation</button>
 </div>
-
 {% endif %}
 
 <div class="foot">
-  <a href="/api/docs/">API Documentation</a> &middot; <a href="/admin/">Admin Panel</a> &middot; <a href="/api/export/powerbi/">Power BI Export</a>
+  <a href="/api/docs/">API Documentation</a> &middot; <a href="/admin/">Admin</a> &middot; <a href="/api/export/powerbi/">Power BI Export</a>
 </div>
-
 </div>
 
 <script>
-function fmt(n){return Number(n).toLocaleString('en-IN')}
+const INR=n=>{const abs=Math.abs(n);const s=abs.toLocaleString('en-IN');return(n<0?'-':'')+'\u20B9'+s};
 
-// Format KPI numbers on load
-document.querySelectorAll('.kpi-num[id]').forEach(el=>{
-  const raw=el.textContent.trim().replace(/,/g,'');
+// Format all data-fmt elements
+document.querySelectorAll('[data-fmt]').forEach(el=>{
+  const raw=el.getAttribute('data-fmt').replace(/,/g,'');
   const n=parseFloat(raw);
-  if(!isNaN(n)) el.textContent=(n<0?'-':'')+'\u20B9'+fmt(Math.abs(n));
-});
-// Format table amounts
-document.querySelectorAll('.amt-r,.amt-a').forEach(el=>{
-  const raw=el.textContent.trim().replace(/,/g,'');
-  const n=parseFloat(raw);
-  if(!isNaN(n)) el.textContent='\u20B9'+fmt(Math.abs(n));
+  if(!isNaN(n))el.textContent=INR(n);
 });
 
-const P=['#8b6cf6','#22c55e','#ef4444','#eab308','#3b82f6','#a78bfa','#f97316','#ec4899','#06b6d4','#84cc16','#f472b6','#facc15','#818cf8','#14b8a6','#c084fc'];
+const C=['#a78bfa','#4ade80','#f87171','#fbbf24','#60a5fa','#818cf8','#f97316','#ec4899','#22d3ee','#84cc16','#f472b6','#facc15','#c084fc','#14b8a6','#fb923c'];
+const gridC='rgba(255,255,255,.03)';
+const tickC='#52525b';
+
+Chart.defaults.font.family="'Inter',sans-serif";
 
 {% if has_data %}
-// Category bar
-new Chart(document.getElementById('c-cat'),{type:'bar',data:{labels:{{cat_labels|safe}},datasets:[{data:{{cat_values|safe}},backgroundColor:P.slice(0,{{cat_labels|safe}}.length),borderRadius:5,borderSkipped:false}]},options:{indexAxis:'y',responsive:true,plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>'\u20B9'+fmt(c.raw)}}},scales:{x:{grid:{color:'rgba(255,255,255,.03)'},ticks:{color:'#606078',font:{size:10},callback:v=>'\u20B9'+fmt(v)}},y:{grid:{display:false},ticks:{color:'#a0a0b8',font:{size:11,weight:'500'}}}}}});
+new Chart(document.getElementById('c1'),{type:'bar',data:{labels:{{cat_labels|safe}},datasets:[{data:{{cat_values|safe}},backgroundColor:C.slice(0,{{cat_labels|safe}}.length),borderRadius:4,borderSkipped:false,barThickness:14}]},options:{indexAxis:'y',responsive:true,plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>INR(c.raw)}}},scales:{x:{grid:{color:gridC},ticks:{color:tickC,font:{size:9},callback:v=>INR(v)}},y:{grid:{display:false},ticks:{color:'#a1a1aa',font:{size:10,weight:'500'}}}}}});
 
-// Pie
-new Chart(document.getElementById('c-pie'),{type:'doughnut',data:{labels:{{cat_labels|safe}},datasets:[{data:{{cat_values|safe}},backgroundColor:P.slice(0,{{cat_labels|safe}}.length),borderWidth:0}]},options:{responsive:true,cutout:'58%',plugins:{legend:{position:'right',labels:{color:'#606078',font:{size:10},padding:10,usePointStyle:true,pointStyleWidth:7}},tooltip:{callbacks:{label:c=>c.label+': \u20B9'+fmt(c.raw)}}}}});
+new Chart(document.getElementById('c4'),{type:'doughnut',data:{labels:{{cat_labels|safe}},datasets:[{data:{{cat_values|safe}},backgroundColor:C.slice(0,{{cat_labels|safe}}.length),borderWidth:0,hoverOffset:6}]},options:{responsive:true,cutout:'60%',plugins:{legend:{position:'right',labels:{color:tickC,font:{size:9},padding:8,usePointStyle:true,pointStyleWidth:6}},tooltip:{callbacks:{label:c=>c.label+': '+INR(c.raw)}}}}});
 
-// Cashflow
-new Chart(document.getElementById('c-flow'),{type:'line',data:{labels:{{cashflow_labels|safe}},datasets:[{label:'Credits',data:{{cashflow_credits|safe}},borderColor:'#22c55e',backgroundColor:'rgba(34,197,94,.06)',fill:true,tension:.4,borderWidth:2,pointRadius:2,pointBackgroundColor:'#22c55e'},{label:'Debits',data:{{cashflow_debits|safe}},borderColor:'#ef4444',backgroundColor:'rgba(239,68,68,.06)',fill:true,tension:.4,borderWidth:2,pointRadius:2,pointBackgroundColor:'#ef4444'}]},options:{responsive:true,plugins:{legend:{labels:{color:'#606078',font:{size:10},usePointStyle:true}},tooltip:{callbacks:{label:c=>c.dataset.label+': \u20B9'+fmt(c.raw)}}},scales:{x:{grid:{color:'rgba(255,255,255,.03)'},ticks:{color:'#606078',font:{size:9}}},y:{grid:{color:'rgba(255,255,255,.03)'},ticks:{color:'#606078',font:{size:10},callback:v=>'\u20B9'+fmt(v)}}}}});
+new Chart(document.getElementById('c2'),{type:'line',data:{labels:{{cashflow_labels|safe}},datasets:[{label:'Credits',data:{{cashflow_credits|safe}},borderColor:'#4ade80',backgroundColor:'rgba(74,222,128,.05)',fill:true,tension:.4,borderWidth:1.5,pointRadius:2,pointBackgroundColor:'#4ade80'},{label:'Debits',data:{{cashflow_debits|safe}},borderColor:'#f87171',backgroundColor:'rgba(248,113,113,.05)',fill:true,tension:.4,borderWidth:1.5,pointRadius:2,pointBackgroundColor:'#f87171'}]},options:{responsive:true,interaction:{intersect:false,mode:'index'},plugins:{legend:{labels:{color:tickC,font:{size:9},usePointStyle:true,padding:12}},tooltip:{callbacks:{label:c=>c.dataset.label+': '+INR(c.raw)}}},scales:{x:{grid:{color:gridC},ticks:{color:tickC,font:{size:8},maxRotation:0}},y:{grid:{color:gridC},ticks:{color:tickC,font:{size:9},callback:v=>INR(v)}}}}});
 
-// Recon bar
-new Chart(document.getElementById('c-recon'),{type:'bar',data:{labels:{{recon_labels|safe}},datasets:[{data:{{recon_values|safe}},backgroundColor:['#22c55e','#eab308','#ef4444','#3b82f6'],borderRadius:5,borderSkipped:false}]},options:{responsive:true,plugins:{legend:{display:false}},scales:{x:{grid:{display:false},ticks:{color:'#a0a0b8',font:{size:10,weight:'600'}}},y:{grid:{color:'rgba(255,255,255,.03)'},ticks:{color:'#606078',font:{size:10},stepSize:1}}}}});
+new Chart(document.getElementById('c3'),{type:'bar',data:{labels:{{recon_labels|safe}},datasets:[{data:{{recon_values|safe}},backgroundColor:['#4ade80','#fbbf24','#f87171','#60a5fa'],borderRadius:4,borderSkipped:false,barThickness:28}]},options:{responsive:true,plugins:{legend:{display:false}},scales:{x:{grid:{display:false},ticks:{color:'#a1a1aa',font:{size:9,weight:'600'}}},y:{grid:{color:gridC},ticks:{color:tickC,font:{size:9},stepSize:1}}}}});
 {% endif %}
 
-// Upload
-let ready=new Set();
-async function upload(inp,type){
+let rdy=new Set();
+async function up(inp,t){
   const f=inp.files[0];if(!f)return;
-  const ep=type==='bank'?'/api/upload/bank/':'/api/upload/ledger/';
-  const st=document.getElementById('s-'+type)||document.getElementById('s-'+type+'2');
+  const ep=t==='bank'?'/api/upload/bank/':'/api/upload/ledger/';
+  const st=document.getElementById('s'+(t==='bank'?'1':'2'))||document.getElementById('s'+(t==='bank'?'3':'4'));
   const fd=new FormData();fd.append('file',f);
-  if(st)st.innerHTML='<span style="color:var(--a)">Uploading...</span>';
+  if(st)st.innerHTML='<span style="color:var(--am)">Uploading...</span>';
   try{
-    const r=await fetch(ep,{method:'POST',body:fd});
-    const d=await r.json();
-    if(r.ok){
-      if(st)st.innerHTML='<span style="color:var(--g)">'+d.created+' added, '+d.duplicates_skipped+' skipped</span>';
-      ready.add(type);
-      const b=document.getElementById('run-btn');
-      if(b&&ready.size>=2)b.disabled=false;
-    }else{if(st)st.innerHTML='<span style="color:var(--r)">'+d.error+'</span>';}
-  }catch(e){if(st)st.innerHTML='<span style="color:var(--r)">Failed</span>';}
+    const r=await fetch(ep,{method:'POST',body:fd});const d=await r.json();
+    if(r.ok){if(st)st.innerHTML='<span style="color:var(--g)">'+d.created+' added, '+d.duplicates_skipped+' dupes skipped</span>';rdy.add(t);const b=document.getElementById('go');if(b&&rdy.size>=2)b.disabled=false;}
+    else{if(st)st.innerHTML='<span style="color:var(--r)">'+d.error+'</span>';}
+  }catch(e){if(st)st.innerHTML='<span style="color:var(--r)">Upload failed</span>';}
 }
-async function reconcile(){
-  try{
-    const r=await fetch('/api/reconcile/',{method:'POST'});
-    const d=await r.json();
-    if(r.ok){alert('Done. Matched: '+d.matched+', Probable: '+d.probable+', Unmatched: '+(d.unmatched_bank+d.unmatched_internal));location.reload();}
+async function recon(){
+  try{const r=await fetch('/api/reconcile/',{method:'POST'});const d=await r.json();
+    if(r.ok){alert('Reconciliation done — '+d.matched+' matched, '+d.probable+' probable, '+(d.unmatched_bank+d.unmatched_internal)+' unmatched');location.reload();}
     else alert(d.error);
   }catch(e){alert('Failed');}
 }
