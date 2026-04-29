@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: pilgrim-finance
+    runtime: python
+    buildCommand: pip install -r requirements.txt && python manage.py collectstatic --noinput && python manage.py migrate --noinput
+    startCommand: gunicorn config.wsgi:application --bind 0.0.0.0:$PORT --workers 2 --timeout 120
+    envVars:
+      - key: SECRET_KEY
+        value: pilgrim-finance-prod-2026
+      - key: DEBUG
+        value: "False"
