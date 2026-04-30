@@ -1,0 +1,31 @@
+date,description,amount,category
+2026-03-01,February salary credited,72000,Salary
+2026-03-02,Home loan EMI - HDFC,22500,Loan & EMI
+2026-03-02,Vodafone postpaid bill,399,Utilities
+2026-03-03,BigBasket weekly grocery,3150,Food & Dining
+2026-03-04,Uber cab to office,289,Transport
+2026-03-04,Paytm wallet top-up,2000,Transfers
+2026-03-05,Netflix monthly subscription,649,Subscriptions
+2026-03-05,Amazon Prime annual,1499,Shopping
+2026-03-06,Jio mobile recharge,555,Utilities
+2026-03-06,Train ticket Mumbai-Delhi,1845,Transport
+2026-03-07,Friday team dinner,756,Food & Dining
+2026-03-08,Zerodha stock purchase,15000,Investments
+2026-03-08,Fixed deposit maturity,50000,Investments
+2026-03-09,Monthly rent via CRED,20000,Rent & Housing
+2026-03-09,Apollo doctor consultation,800,Healthcare
+2026-03-10,Flipkart laptop stand,8999,Shopping
+2026-03-10,Rapido bike ride,65,Transport
+2026-03-11,Tata AIA life insurance,6000,Insurance
+2026-03-11,Reliance dividend Q3,3200,Investments
+2026-03-12,Swiggy Instamart groceries,1280,Food & Dining
+2026-03-12,Decathlon running shoes,4750,Shopping
+2026-03-13,Ola auto rickshaw,178,Transport
+2026-03-14,Myntra sale purchase,3499,Shopping
+2026-03-15,Salary advance received,25000,Salary
+2026-03-15,MSEDCL electricity bill,1890,Utilities
+2026-03-17,Coffee meeting with client,450,Food & Dining
+2026-03-18,Udemy data science course,499,Education
+2026-03-20,Zomato Gold subscription,1200,Food & Dining
+2026-03-20,Provisions for audit fees,7500,Uncategorized
+2026-03-20,Parking charges monthly,1800,Transport
