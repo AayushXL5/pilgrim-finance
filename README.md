@@ -8,7 +8,7 @@ Built for the Data & Automation Intern assignment at Pilgrim.
 
 **Dashboard**: https://pilgrim-finance.onrender.com  
 **API Docs**: https://pilgrim-finance.onrender.com/api/docs/  
-**Power BI Export**: https://pilgrim-finance.onrender.com/api/export/powerbi/
+**Power BI Report**: [View Interactive Dashboard](https://app.powerbi.com/view?r=eyJrIjoiYzNlNzkxNTktMzNmMi00YjRjLWE1YWUtMjBiNjZiOWVhNTkwIiwidCI6ImM2ZTU0OWIzLTVmNDUtNDAzMi1hYWU5LWQ0MjQ0ZGM1YjJjNCJ9)
 
 The dashboard is pre-loaded with demo data — no setup needed. You can also upload custom CSVs from the UI.
 
