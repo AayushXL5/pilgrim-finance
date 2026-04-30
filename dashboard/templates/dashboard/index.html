@@ -83,12 +83,20 @@ td.mono{font-weight:700}
 .empty h2{font-size:24px;font-weight:800;letter-spacing:-.5px;margin-bottom:8px}
 .empty p{font-size:13px;color:var(--t3);max-width:440px;margin:0 auto 28px;line-height:1.7}
 
+/* ── Info Box ── */
+.info{background:#fef9c3;border:1px solid #fde047;border-radius:var(--rad);padding:20px 24px;margin-bottom:28px}
+.info-title{font-size:12px;font-weight:700;color:#854d0e;margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.info-grid{display:grid;grid-template-columns:1fr 1fr;gap:4px 24px}
+.info-item{font-size:11px;color:#713f12;line-height:1.8}
+.info-item b{font-weight:700;color:#854d0e}
+.info-dot{width:6px;height:6px;border-radius:50%;display:inline-block;margin-right:4px}
+
 /* ── Footer ── */
 .foot{text-align:center;padding:40px 0;font-size:10px;color:var(--t3);letter-spacing:.3px;border-top:1px solid var(--b1);margin-top:40px}
 .foot a{color:var(--t2);text-decoration:none}.foot a:hover{color:var(--t1)}
 
 @media(max-width:1024px){.kpis{grid-template-columns:repeat(3,1fr)}}
-@media(max-width:768px){.kpis{grid-template-columns:repeat(2,1fr)}.grid-2,.up-grid{grid-template-columns:1fr}.shell{padding:20px 16px}}
+@media(max-width:768px){.kpis{grid-template-columns:repeat(2,1fr)}.grid-2,.up-grid{grid-template-columns:1fr}.shell{padding:20px 16px}.info-grid{grid-template-columns:1fr}}
 @media(max-width:480px){.kpis{grid-template-columns:1fr}}
 </style>
 </head>
@@ -136,6 +144,26 @@ td.mono{font-weight:700}
 </div>
 
 {% else %}
+
+<div class="info">
+  <div class="info-title">Dashboard Overview</div>
+  <div class="info-grid">
+    <div class="info-item"><span class="info-dot" style="background:#854d0e"></span><b>Power BI Report</b> — Interactive 3-page report (scroll down in the embed)</div>
+    <div class="info-item"><span class="info-dot" style="background:#854d0e"></span><b>KPI Cards</b> — Credits, Debits, Net Position, Match Rate, Anomalies</div>
+    <div class="info-item"><span class="info-dot" style="background:#854d0e"></span><b>Charts</b> — Category expenses, Daily cashflow, Reconciliation breakdown</div>
+    <div class="info-item"><span class="info-dot" style="background:#854d0e"></span><b>Tables</b> — Unmatched transactions and flagged anomalies</div>
+    <div class="info-item"><span class="info-dot" style="background:#854d0e"></span><b>Upload</b> — Drop custom CSVs to replace or add data</div>
+    <div class="info-item"><span class="info-dot" style="background:#854d0e"></span><b>APIs</b> — 9 REST endpoints with <a href="/api/docs/" style="color:#854d0e;font-weight:700">Swagger docs</a></div>
+  </div>
+</div>
+
+<div class="p" style="margin-bottom:28px">
+  <div class="p-title">Power BI Report</div>
+  <div style="font-size:11px;color:var(--t3);margin-bottom:12px">Interactive 3-page report — Executive Summary, Reconciliation Detail, Anomaly Detection. Use the page tabs at the bottom to navigate.</div>
+  <div style="position:relative;padding-bottom:62.25%;height:0;overflow:hidden;border-radius:8px;border:1px solid var(--b1)">
+    <iframe title="Pilgrim Finance Dashboard" style="position:absolute;top:0;left:0;width:100%;height:100%;border:0" src="https://app.powerbi.com/view?r=eyJrIjoiYzNlNzkxNTktMzNmMi00YjRjLWE1YWUtMjBiNjZiOWVhNTkwIiwidCI6ImM2ZTU0OWIzLTVmNDUtNDAzMi1hYWU5LWQ0MjQ0ZGM1YjJjNCJ9" allowFullScreen="true"></iframe>
+  </div>
+</div>
 
 <div class="kpis">
   <div class="k">
@@ -227,13 +255,6 @@ td.mono{font-weight:700}
 </div>
 {% endif %}
 
-<div class="p" style="margin-bottom:16px">
-  <div class="p-title">Power BI Report</div>
-  <div style="font-size:11px;color:var(--t3);margin-bottom:12px">Interactive 3-page report — Executive Summary, Reconciliation Detail, Anomaly Detection</div>
-  <div style="position:relative;padding-bottom:62.25%;height:0;overflow:hidden;border-radius:8px;border:1px solid var(--b1)">
-    <iframe title="Pilgrim Finance Dashboard" style="position:absolute;top:0;left:0;width:100%;height:100%;border:0" src="https://app.powerbi.com/view?r=eyJrIjoiYzNlNzkxNTktMzNmMi00YjRjLWE1YWUtMjBiNjZiOWVhNTkwIiwidCI6ImM2ZTU0OWIzLTVmNDUtNDAzMi1hYWU5LWQ0MjQ0ZGM1YjJjNCJ9" allowFullScreen="true"></iframe>
-  </div>
-</div>
 
 <div class="up-wrap">
   <div class="p-title" style="margin-bottom:4px">Upload Custom Data</div>
