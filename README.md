@@ -4,6 +4,14 @@ A Django-based finance automation system that ingests raw financial data (bank s
 
 Built for the Data & Automation Intern assignment at Pilgrim.
 
+## Live Demo
+
+**Dashboard**: https://pilgrim-finance.onrender.com  
+**API Docs**: https://pilgrim-finance.onrender.com/api/docs/  
+**Power BI Export**: https://pilgrim-finance.onrender.com/api/export/powerbi/
+
+The dashboard is pre-loaded with demo data — no setup needed. You can also upload custom CSVs from the UI.
+
 ## What it does
 
 1. **Ingests CSVs** — upload bank statements and internal ledger files via API or the dashboard UI. Duplicates are detected using SHA-256 hashing and skipped automatically.
@@ -15,7 +23,7 @@ Built for the Data & Automation Intern assignment at Pilgrim.
 
    Entries scoring ≥80 are auto-matched, 60-79 are flagged as probable, below 60 are unmatched.
 
-3. **Auto-categorizes** — 15 built-in regex rules classify transactions into categories (Food, Transport, Utilities, etc.) based on narration text. Categories like "Swiggy" → Food & Dining, "Uber" → Transport. Rules are extensible via the admin panel.
+3. **Auto-categorizes** — 15 built-in regex rules classify transactions into categories (Food, Transport, Utilities, etc.) based on narration text.
 
 4. **Flags anomalies** — transactions exceeding category-specific thresholds are flagged (e.g., a ₹5,000 food expense when the typical threshold is ₹2,000).
 
@@ -26,10 +34,17 @@ Built for the Data & Automation Intern assignment at Pilgrim.
 - **Backend**: Django 5.x + Django REST Framework
 - **Database**: PostgreSQL (SQLite for local dev)
 - **Dashboard**: Django templates + Chart.js
-- **Background tasks**: Celery + Redis
 - **API docs**: Swagger/OpenAPI via drf-spectacular
-- **Deployment**: Docker + Railway
-- **Power BI**: CSV export endpoint for direct connection
+- **Deployment**: Docker + Render
+- **Power BI**: 3-page interactive dashboard connected via CSV export API
+
+## Power BI Dashboard
+
+The `/api/export/powerbi/` endpoint exports a structured CSV with confidence scores, anomaly flags, and categories. The Power BI report (`powerbi_data/Pilgrim assignment dashboards.pbix`) includes:
+
+- **Page 1 — Executive Summary**: KPI cards, reconciliation status donut, expenses by category, daily cashflow trend
+- **Page 2 — Reconciliation Detail**: Transaction table with confidence scores, average confidence gauge (68.23), match distribution
+- **Page 3 — Anomaly Detection**: Filtered anomaly table with reasons, anomalies by category pie chart
 
 ## API Endpoints
 
@@ -54,50 +69,36 @@ python -m venv venv
 source venv/bin/activate   # Windows: venv\Scripts\activate
 pip install -r requirements.txt
 python manage.py migrate
-python manage.py generate_sample_data
+python manage.py seed_demo
 python manage.py runserver
 ```
 
-Then open http://localhost:8000, upload the sample CSVs from `sample_data/`, and hit "Run Reconciliation".
-
-### Docker (PostgreSQL + Redis)
+### Docker (PostgreSQL)
 ```bash
 docker-compose up --build
 ```
-
-Opens at http://localhost:8000. Includes PostgreSQL and Redis for Celery.
 
 ## Project Structure
 
 ```
 pilgrim-finance/
-├── config/                 # Django project settings, URLs, Celery
+├── config/                 # Django project settings, URLs
 ├── finance/                # Core app
 │   ├── models.py           # BankTransaction, InternalLedgerEntry, Ledger, etc.
 │   ├── reconciliation.py   # Matching engine with confidence scoring
 │   ├── categorizer.py      # Regex-based auto-categorization
 │   ├── views.py            # REST API endpoints
 │   ├── serializers.py      # DRF serializers
-│   ├── tasks.py            # Celery background tasks
 │   └── management/commands/
-│       └── generate_sample_data.py
+│       ├── generate_sample_data.py
+│       └── seed_demo.py    # Auto-seeds demo data on deployment
 ├── dashboard/              # Web dashboard (Django templates + Chart.js)
 ├── sample_data/            # Pre-generated test CSVs
+├── powerbi_data/           # Power BI report + export CSV
 ├── Dockerfile
 ├── docker-compose.yml
 └── requirements.txt
 ```
-
-## Sample Data
-
-The included CSVs contain ~45 bank transactions and ~43 internal ledger entries with deliberate edge cases:
-
-- Exact matches (same amount, same day)
-- Date offsets (±1-2 days between bank and internal)
-- Fuzzy narrations ("SWIGGY ORDER #4521" vs "Swiggy Order")
-- Unmatched transactions on both sides
-- One duplicate entry for dedup testing
-- Indian vendors (Swiggy, Zomato, Jio, Airtel, etc.) for auto-categorization
 
 ## Reconciliation Results (sample data)
 
