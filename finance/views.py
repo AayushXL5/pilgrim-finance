@@ -8,7 +8,7 @@ from decimal import Decimal
 from django.db.models import Sum, Count, Q, F
 from django.http import HttpResponse
 from rest_framework import status
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, authentication_classes, permission_classes
 from rest_framework.response import Response
 from drf_spectacular.utils import extend_schema, OpenApiParameter
 
@@ -33,6 +33,8 @@ from finance.categorizer import categorize
     request={'multipart/form-data': {'type': 'object', 'properties': {'file': {'type': 'string', 'format': 'binary'}}}},
 )
 @api_view(['POST'])
+@authentication_classes([])
+@permission_classes([])
 def upload_bank_statement(request):
     """Upload and ingest a bank statement CSV."""
     file = request.FILES.get('file')
@@ -91,6 +93,8 @@ def upload_bank_statement(request):
     request={'multipart/form-data': {'type': 'object', 'properties': {'file': {'type': 'string', 'format': 'binary'}}}},
 )
 @api_view(['POST'])
+@authentication_classes([])
+@permission_classes([])
 def upload_internal_ledger(request):
     """Upload and ingest an internal ledger CSV."""
     file = request.FILES.get('file')
@@ -148,6 +152,8 @@ def upload_internal_ledger(request):
     description='Deletes all uploaded CSVs and ledger data to reset the engine.',
 )
 @api_view(['POST'])
+@authentication_classes([])
+@permission_classes([])
 def clear_data(request):
     """Clear all data from the database."""
     BankTransaction.objects.all().delete()
@@ -164,6 +170,8 @@ def clear_data(request):
     description='Triggers the reconciliation engine. Matches bank transactions against internal ledger entries using confidence scoring (amount + date + narration similarity).',
 )
 @api_view(['POST'])
+@authentication_classes([])
+@permission_classes([])
 def trigger_reconciliation(request):
     """Run the reconciliation engine."""
     bank_count = BankTransaction.objects.count()
@@ -356,3 +364,43 @@ def ledger_list(request):
         'count': qs.count(),
         'results': serializer.data,
     })
+
+
+# ── Sample Data ──
+
+@extend_schema(exclude=True)
+@api_view(['GET'])
+def download_sample_bank(request):
+    """Serve sample bank CSV directly."""
+    content = (
+        "date,narration,amount,type\n"
+        "2026-04-10,Amazon Web Services,150.00,debit\n"
+        "2026-04-12,Client Payment ACME Corp,5000.00,credit\n"
+        "2026-04-15,Uber Rides,45.50,debit\n"
+        "2026-04-18,WeWork Office Rent,1200.00,debit\n"
+        "2026-04-20,Software Subscriptions,299.99,debit\n"
+        "2026-04-22,Consulting Fee,2500.00,credit\n"
+        "2026-04-25,Google Ads,850.00,debit\n"
+    )
+    response = HttpResponse(content, content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="bank_statement.csv"'
+    return response
+
+
+@extend_schema(exclude=True)
+@api_view(['GET'])
+def download_sample_ledger(request):
+    """Serve sample ledger CSV directly."""
+    content = (
+        "date,description,amount,category\n"
+        "2026-04-10,AWS Cloud Hosting,-150.00,Software\n"
+        "2026-04-12,Invoice 1042 - ACME,5000.00,Revenue\n"
+        "2026-04-15,Uber ride to meeting,-45.50,Travel\n"
+        "2026-04-18,WeWork Monthly Rent,-1200.00,Office\n"
+        "2026-04-20,SaaS Subscriptions,-300.00,Software\n"
+        "2026-04-22,Consulting - John Doe,2500.00,Revenue\n"
+        "2026-04-26,Google Advertising,-850.00,Marketing\n"
+    )
+    response = HttpResponse(content, content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="internal_ledger.csv"'
+    return response

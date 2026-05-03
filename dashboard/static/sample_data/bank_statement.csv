@@ -1,0 +1,8 @@
+date,narration,amount,type
+2026-04-10,Amazon Web Services,150.00,debit
+2026-04-12,Client Payment ACME Corp,5000.00,credit
+2026-04-15,Uber Rides,45.50,debit
+2026-04-18,WeWork Office Rent,1200.00,debit
+2026-04-20,Software Subscriptions,299.99,debit
+2026-04-22,Consulting Fee,2500.00,credit
+2026-04-25,Google Ads,850.00,debit

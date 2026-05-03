@@ -17,4 +17,7 @@ urlpatterns = [
     path('export/powerbi/', views.export_powerbi, name='export-powerbi'),
     # Ledger
     path('ledger/', views.ledger_list, name='ledger-list'),
+    # Sample Data
+    path('sample/bank/', views.download_sample_bank, name='sample-bank'),
+    path('sample/ledger/', views.download_sample_ledger, name='sample-ledger'),
 ]
