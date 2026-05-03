@@ -5,6 +5,7 @@ urlpatterns = [
     # Upload
     path('upload/bank/', views.upload_bank_statement, name='upload-bank'),
     path('upload/ledger/', views.upload_internal_ledger, name='upload-ledger'),
+    path('clear/', views.clear_data, name='clear-data'),
     # Reconciliation
     path('reconcile/', views.trigger_reconciliation, name='reconcile'),
     path('reconciliation/', views.reconciliation_list, name='reconciliation-list'),

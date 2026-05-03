@@ -143,6 +143,20 @@ def upload_internal_ledger(request):
     })
 
 
+@extend_schema(
+    summary='Clear all data',
+    description='Deletes all uploaded CSVs and ledger data to reset the engine.',
+)
+@api_view(['POST'])
+def clear_data(request):
+    """Clear all data from the database."""
+    BankTransaction.objects.all().delete()
+    InternalLedgerEntry.objects.all().delete()
+    ReconciliationResult.objects.all().delete()
+    Ledger.objects.all().delete()
+    return Response({'message': 'All data successfully cleared.'})
+
+
 # ── Reconciliation ──
 
 @extend_schema(

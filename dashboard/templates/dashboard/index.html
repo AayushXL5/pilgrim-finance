@@ -4,323 +4,648 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Finance Reconciliation</title>
+<title>Pilgrim Finance Dashboard</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
 <style>
-*{box-sizing:border-box;margin:0;padding:0}
-html{-webkit-font-smoothing:antialiased;scroll-behavior:smooth}
+/* Apple White Theme — Clean, Minimalist, Professional */
+:root {
+    --bg-page: #FFFFFF;
+    --bg-section: #F5F5F7;
+    --bg-card: #FFFFFF;
+    --bg-hover: #F0F0F2;
+    --bg-input: #F5F5F7;
+    --bg-active: #E8E8ED;
 
-:root{
-  --f:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
-  --bg:#fff;
-  --bg2:#fafafa;
-  --card:#fff;
-  --b1:#e5e5e5;
-  --b2:#d4d4d4;
-  --t1:#0a0a0a;
-  --t2:#525252;
-  --t3:#a3a3a3;
-  --t4:#d4d4d4;
-  --accent:#0a0a0a;
-  --g:#16a34a;
-  --r:#dc2626;
-  --am:#d97706;
-  --bl:#2563eb;
-  --rad:12px;
+    --border: #D2D2D7;
+    --border-light: #E5E5EA;
+
+    --text-primary: #1D1D1F;
+    --text-secondary: #6E6E73;
+    --text-tertiary: #86868B;
+    --text-link: #0066CC;
+
+    --positive: #34C759;
+    --positive-bg: #E8F8EE;
+    --positive-text: #1B7A34;
+    --negative: #FF3B30;
+    --negative-bg: #FDECEB;
+    --negative-text: #C0291F;
+    --warning: #FF9F0A;
+    --warning-bg: #FFF5E6;
+    --warning-text: #B26E00;
+    --neutral-color: #8E8E93;
+    --neutral-bg: #F2F2F7;
+    --accent: #0071E3;
+    --accent-hover: #0077ED;
+    --accent-bg: #EBF5FF;
+
+    --radius-sm: 8px;
+    --radius-md: 12px;
+    --radius-lg: 16px;
+    --radius-full: 9999px;
+
+    --shadow-sm: 0 1px 3px rgba(0,0,0,0.06);
+    --shadow-md: 0 2px 8px rgba(0,0,0,0.08);
+
+    --font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    --transition: 0.2s ease;
 }
 
-body{font-family:var(--f);background:var(--bg);color:var(--t1);line-height:1.6;min-height:100vh}
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+html { font-size: 14px; scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
+body { font-family: var(--font); background: var(--bg-section); color: var(--text-primary); line-height: 1.55; min-height: 100vh; }
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: var(--radius-full); }
 
-.shell{max-width:1200px;margin:0 auto;padding:32px 24px}
+/* App Shell - Full Width */
+.app-container { max-width: 1600px; margin: 0 auto; padding: 20px 40px; }
 
-/* ── Nav ── */
-.nav{display:flex;align-items:center;justify-content:space-between;margin-bottom:48px;padding-bottom:20px;border-bottom:1px solid var(--b1)}
-.nav-left{display:flex;align-items:baseline;gap:12px}
-.nav-title{font-size:15px;font-weight:800;letter-spacing:-.3px}
-.nav-sub{font-size:11px;color:var(--t3);font-weight:400}
-.nav-links{display:flex;gap:24px}
-.nl{font-size:12px;font-weight:500;color:var(--t3);text-decoration:none;transition:color .15s}
-.nl:hover{color:var(--t1)}
+/* Header */
+.app-header { display: flex; align-items: center; justify-content: space-between; padding: 16px 0 20px; border-bottom: 1px solid var(--border-light); margin-bottom: 20px; }
+.app-logo { display: flex; align-items: center; gap: 14px; }
+.app-logo-icon { width: 38px; height: 38px; border-radius: var(--radius-md); background: transparent; color: var(--text-primary); display: flex; align-items: center; justify-content: center; font-size: 1rem; font-weight: 700; }
+.app-logo h1 { font-size: 1.2rem; font-weight: 700; color: var(--text-primary); letter-spacing: -0.02em; }
+.app-logo p { font-size: 0.72rem; color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.05em; }
+.header-actions { display: flex; gap: 10px; align-items: center; }
+.btn { display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; border-radius: var(--radius-md); font-family: var(--font); font-size: 0.82rem; font-weight: 500; cursor: pointer; transition: all var(--transition); border: 1px solid var(--border); background: var(--bg-card); color: var(--text-primary); text-decoration: none; }
+.btn:hover { background: var(--bg-hover); border-color: var(--text-tertiary); }
+.btn-primary { background: var(--text-primary); color: #fff; border-color: var(--text-primary); }
+.btn-primary:hover { background: #333; }
+.btn-sm { padding: 5px 12px; font-size: 0.75rem; }
+.pipeline-status { display: flex; align-items: center; gap: 6px; font-size: 0.78rem; color: var(--text-secondary); }
+.status-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--positive); animation: pulse 2s infinite; }
+@keyframes pulse { 0%,100% { opacity:1; } 50% { opacity:0.4; } }
 
-/* ── KPIs ── */
-.kpis{display:grid;grid-template-columns:repeat(5,1fr);gap:1px;background:var(--b1);border:1px solid var(--b1);border-radius:var(--rad);overflow:hidden;margin-bottom:40px}
-.k{background:var(--card);padding:24px 20px}
-.k-label{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:var(--t3);margin-bottom:10px}
-.k-val{font-size:28px;font-weight:800;letter-spacing:-1.5px;line-height:1;font-variant-numeric:tabular-nums}
-.k-val.c-g{color:var(--g)}.k-val.c-r{color:var(--r)}.k-val.c-am{color:var(--am)}.k-val.c-bl{color:var(--bl)}.k-val.c-bk{color:var(--t1)}
-.k-sub{font-size:11px;color:var(--t3);margin-top:6px}
+/* Filter Bar */
+.filter-bar { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; padding: 14px 18px; background: var(--bg-card); border: 1px solid var(--border-light); border-radius: var(--radius-lg); margin-bottom: 20px; }
+.filter-group { display: flex; flex-direction: column; gap: 3px; }
+.filter-label { font-size: 0.68rem; font-weight: 600; color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.06em; }
+.filter-select { padding: 6px 10px; border: 1px solid var(--border-light); border-radius: var(--radius-sm); font-family: var(--font); font-size: 0.8rem; color: var(--text-primary); background: var(--bg-input); outline: none; transition: border var(--transition); min-width: 140px; }
+.filter-select:focus { border-color: var(--accent); }
+.filter-reset { margin-left: auto; font-size: 0.78rem; color: var(--text-link); cursor: pointer; background: none; border: none; font-family: var(--font); font-weight: 500; }
+.filter-reset:hover { text-decoration: underline; }
 
-/* ── Panels ── */
-.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px}
-.p{background:var(--card);border:1px solid var(--b1);border-radius:var(--rad);padding:24px}
-.p-title{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--t2);margin-bottom:20px}
+/* KPI Strip */
+.kpi-strip { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; margin-bottom: 20px; }
+.kpi-card { background: var(--bg-card); border: 1px solid var(--border-light); border-radius: var(--radius-lg); padding: 18px 20px; transition: box-shadow var(--transition); }
+.kpi-card:hover { box-shadow: var(--shadow-sm); }
+.kpi-label { font-size: 0.7rem; color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.06em; font-weight: 600; margin-bottom: 4px; }
+.kpi-value { font-size: 1.8rem; font-weight: 700; color: var(--text-primary); letter-spacing: -0.03em; font-variant-numeric: tabular-nums;}
+.kpi-value.positive { color: var(--positive-text); }
+.kpi-value.negative { color: var(--negative-text); }
+.kpi-value.warning { color: var(--warning-text); }
+.kpi-sub { font-size: 0.7rem; color: var(--text-tertiary); margin-top: 4px; }
 
-/* ── Tables ── */
-.tbl{background:var(--card);border:1px solid var(--b1);border-radius:var(--rad);padding:24px;margin-bottom:16px;overflow-x:auto}
-table{width:100%;border-collapse:collapse}
-th{text-align:left;font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--t3);padding:8px 10px;border-bottom:1px solid var(--b1)}
-td{font-size:12px;color:var(--t2);padding:12px 10px;border-bottom:1px solid var(--bg2);font-variant-numeric:tabular-nums}
-tr:hover td{background:var(--bg2)}
-.tag{font-size:9px;font-weight:700;letter-spacing:.3px;padding:3px 8px;border-radius:4px;display:inline-block;text-transform:uppercase}
-.tag-r{background:#fef2f2;color:var(--r)}.tag-am{background:#fffbeb;color:var(--am)}.tag-g{background:#f0fdf4;color:var(--g)}
-.src{font-size:9px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:var(--t3)}
-td.mono{font-weight:700}
+/* Cards & Grid */
+.grid { display: grid; gap: 14px; margin-bottom: 20px; }
+.grid-2 { grid-template-columns: repeat(2, 1fr); }
+.card { background: var(--bg-card); border: 1px solid var(--border-light); border-radius: var(--radius-lg); padding: 20px; transition: box-shadow var(--transition); margin-bottom: 20px; }
+.card:hover { box-shadow: var(--shadow-sm); }
+.card-head { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 16px; }
+.card-title { font-size: 0.92rem; font-weight: 600; color: var(--text-primary); }
+.card-sub { font-size: 0.72rem; color: var(--text-tertiary); margin-top: 2px; }
+.chart-wrap { position: relative; width: 100%; height: 300px; }
 
-/* ── Upload ── */
-.up-wrap{background:var(--bg2);border:1px solid var(--b1);border-radius:var(--rad);padding:28px;margin-bottom:16px}
-.up-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px}
-.drop{border:1.5px dashed var(--b2);border-radius:8px;padding:20px 16px;text-align:center;cursor:pointer;transition:all .15s;background:var(--card)}
-.drop:hover{border-color:var(--t1)}
-.drop-t{font-size:12px;font-weight:600;color:var(--t1)}.drop-s{font-size:10px;color:var(--t3);margin-top:2px}
-.drop-st{font-size:11px;margin-top:6px}
-.btn-go{font-size:12px;font-weight:600;color:#fff;background:var(--t1);border:none;padding:10px 28px;border-radius:8px;cursor:pointer;margin-top:16px;transition:opacity .15s}
-.btn-go:hover{opacity:.8}.btn-go:disabled{opacity:.2;cursor:not-allowed}
+/* Data Table */
+.data-table { width: 100%; border-collapse: collapse; font-size: 0.8rem; }
+.data-table thead th { text-align: left; padding: 8px 12px; color: var(--text-tertiary); font-weight: 600; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.05em; border-bottom: 2px solid var(--border-light); white-space: nowrap; }
+.data-table tbody tr { transition: background var(--transition); }
+.data-table tbody tr:hover { background: var(--bg-section); }
+.data-table td { padding: 9px 12px; color: var(--text-primary); border-bottom: 1px solid var(--border-light); vertical-align: top; font-variant-numeric: tabular-nums;}
+.table-scroll { max-height: 400px; overflow-y: auto; }
 
-/* ── Empty ── */
-.empty{text-align:center;padding:80px 20px}
-.empty h2{font-size:24px;font-weight:800;letter-spacing:-.5px;margin-bottom:8px}
-.empty p{font-size:13px;color:var(--t3);max-width:440px;margin:0 auto 28px;line-height:1.7}
+/* Badges */
+.badge { display: inline-flex; align-items: center; padding: 2px 9px; border-radius: var(--radius-full); font-size: 0.7rem; font-weight: 600; }
+.badge-positive { background: var(--positive-bg); color: var(--positive-text); }
+.badge-negative { background: var(--negative-bg); color: var(--negative-text); }
+.badge-warning { background: var(--warning-bg); color: var(--warning-text); }
+.badge-neutral { background: var(--neutral-bg); color: var(--neutral-color); }
 
-/* ── Info Box ── */
-.info{background:#fef9c3;border:1px solid #fde047;border-radius:var(--rad);padding:20px 24px;margin-bottom:28px}
-.info-title{font-size:12px;font-weight:700;color:#854d0e;margin-bottom:10px;display:flex;align-items:center;gap:6px}
-.info-grid{display:grid;grid-template-columns:1fr 1fr;gap:4px 24px}
-.info-item{font-size:11px;color:#713f12;line-height:1.8}
-.info-item b{font-weight:700;color:#854d0e}
-.info-dot{width:6px;height:6px;border-radius:50%;display:inline-block;margin-right:4px}
+/* Power BI container */
+.pbi-wrap { position:relative; padding-bottom:56.25%; height:0; overflow:hidden; border-radius:var(--radius-lg); border:1px solid var(--border-light); margin-bottom:20px; }
+.pbi-wrap iframe { position:absolute; top:0; left:0; width:100%; height:100%; border:0; }
 
-/* ── Footer ── */
-.foot{text-align:center;padding:40px 0;font-size:10px;color:var(--t3);letter-spacing:.3px;border-top:1px solid var(--b1);margin-top:40px}
-.foot a{color:var(--t2);text-decoration:none}.foot a:hover{color:var(--t1)}
+/* Upload Section */
+.up-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 12px; }
+.drop { border: 1.5px dashed var(--border); border-radius: var(--radius-md); padding: 20px 16px; text-align: center; cursor: pointer; transition: all var(--transition); background: var(--bg-card); }
+.drop:hover { border-color: var(--text-primary); background: var(--bg-hover); }
+.drop-t { font-size: 0.85rem; font-weight: 600; color: var(--text-primary); }
+.drop-s { font-size: 0.7rem; color: var(--text-secondary); margin-top: 2px; }
 
-@media(max-width:1024px){.kpis{grid-template-columns:repeat(3,1fr)}}
-@media(max-width:768px){.kpis{grid-template-columns:repeat(2,1fr)}.grid-2,.up-grid{grid-template-columns:1fr}.shell{padding:20px 16px}.info-grid{grid-template-columns:1fr}}
-@media(max-width:480px){.kpis{grid-template-columns:1fr}}
+/* Info Banner */
+.info-banner { background: #FFFDE7; border: 1px solid #FBC02D; border-radius: var(--radius-md); padding: 20px 24px; margin-bottom: 24px; color: #5D4037; }
+.info-banner h3 { font-size: 0.95rem; font-weight: 700; margin-bottom: 12px; color: #F57F17; }
+.info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px 40px; font-size: 0.82rem; }
+.info-grid li { margin-bottom: 8px; list-style-type: disc; margin-left: 20px; }
+.info-grid li strong { color: #5D4037; font-weight: 600; }
+.info-grid a { color: #F57F17; text-decoration: underline; font-weight: 500; }
+.info-grid a:hover { color: #E65100; }
+
+.empty { text-align: center; padding: 100px 20px; }
+.empty h2 { font-size: 24px; font-weight: 800; letter-spacing: -0.5px; margin-bottom: 8px; }
+.empty p { font-size: 13px; color: var(--text-secondary); max-width: 440px; margin: 0 auto 28px; line-height: 1.7; }
+
+@media(max-width:1024px) { .kpi-strip { grid-template-columns: repeat(3, 1fr); } .info-grid { grid-template-columns: 1fr; } }
+@media(max-width:768px) { .kpi-strip { grid-template-columns: repeat(2, 1fr); } .grid-2 { grid-template-columns: 1fr; } .app-container { padding: 20px; } }
 </style>
 </head>
 <body>
+<div style="display:none">{% csrf_token %}</div>
 
-<div class="shell">
+<div class="app-container">
 
-<nav class="nav">
-  <div class="nav-left">
-    <div class="nav-title">Reconciliation Dashboard</div>
-    <div class="nav-sub">Finance Automation</div>
-  </div>
-  <div class="nav-links">
-    <a href="/api/docs/" class="nl" target="_blank">API Docs</a>
-    <a href="/api/export/powerbi/" class="nl">Export CSV</a>
-    <a href="/admin/" class="nl">Admin</a>
-  </div>
-</nav>
+    <!-- Header -->
+    <header class="app-header">
+        <div class="app-logo">
+            <div class="app-logo-icon">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="12" y1="1" x2="12" y2="23"></line>
+                    <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+                </svg>
+            </div>
+            <div>
+                <h1>Pilgrim Finance</h1>
+                <p>Interactive Reconciliation Dashboard</p>
+            </div>
+        </div>
+        <div class="header-actions">
+            <div class="pipeline-status"><span class="status-dot" id="status-dot"></span><span id="header-status">Initializing...</span></div>
+            {% if has_data %}
+            <button onclick="clearAllData()" class="btn btn-sm" style="color:var(--negative-text); border-color:var(--negative-text);">⚠️ Clear All Data</button>
+            <a href="/api/export/powerbi/" class="btn btn-sm">⬇ Export Normalized CSV</a>
+            {% endif %}
+            <a href="/admin/" class="btn btn-sm" target="_blank">Admin</a>
+            <a href="/api/docs/" class="btn btn-sm" target="_blank">API Docs</a>
+        </div>
+    </header>
 
-{% if not has_data %}
-<div class="empty">
-  <h2>Upload your data</h2>
-  <p>Drop your bank statement and internal ledger CSVs below. The engine matches transactions, scores confidence, flags anomalies, and builds a unified ledger.</p>
-</div>
-<div class="up-wrap">
-  <div class="up-grid">
-    <div>
-      <div class="drop" onclick="document.getElementById('f1').click()" id="z1">
-        <div class="drop-t">bank_statement.csv</div>
-        <div class="drop-s">date, narration, amount, type</div>
-      </div>
-      <input type="file" id="f1" accept=".csv" style="display:none" onchange="up(this,'bank')">
-      <div class="drop-st" id="s1"></div>
+    {% if not has_data %}
+    <!-- Empty State -->
+    <div class="empty">
+        <h2>Upload your data</h2>
+        <p>Drop your bank statement and internal ledger CSVs below. The engine matches transactions, scores confidence, flags anomalies, and builds a unified ledger.</p>
+        
+        <div class="up-grid" style="text-align: left;">
+            <div>
+                <div class="drop" onclick="document.getElementById('f1').click()" id="z1">
+                    <div class="drop-t">bank_statement.csv</div>
+                    <div class="drop-s">date, narration, amount, type</div>
+                </div>
+                <input type="file" id="f1" accept=".csv" style="display:none" onchange="up(this,'bank')">
+                <div id="s1" style="font-size:12px; margin-top:8px;"></div>
+            </div>
+            <div>
+                <div class="drop" onclick="document.getElementById('f2').click()" id="z2">
+                    <div class="drop-t">internal_ledger.csv</div>
+                    <div class="drop-s">date, description, amount, category</div>
+                </div>
+                <input type="file" id="f2" accept=".csv" style="display:none" onchange="up(this,'ledger')">
+                <div id="s2" style="font-size:12px; margin-top:8px;"></div>
+            </div>
+        </div>
+        <div style="display:flex; justify-content:center; gap:10px; margin-top:20px;">
+            <button class="btn btn-primary" id="btn-recon" style="padding:10px 30px;" onclick="recon()" disabled>Run Engine & View Dashboard</button>
+            <button class="btn" style="padding:10px 30px; color:var(--negative-text); border-color:var(--negative-text);" onclick="clearAllData()">Clear Data</button>
+        </div>
     </div>
-    <div>
-      <div class="drop" onclick="document.getElementById('f2').click()" id="z2">
-        <div class="drop-t">internal_ledger.csv</div>
-        <div class="drop-s">date, description, amount, category</div>
-      </div>
-      <input type="file" id="f2" accept=".csv" style="display:none" onchange="up(this,'ledger')">
-      <div class="drop-st" id="s2"></div>
+    {% else %}
+
+    <!-- Info Banner -->
+    <div class="info-banner">
+        <h3>This dashboard delivers both visualization options requested in the assignment</h3>
+        <div class="info-grid">
+            <div>
+                <ul>
+                    <li><strong>Option A — Power BI Report</strong> — Embedded below with 3 interactive pages</li>
+                    <li><strong>Upload</strong> — Drop custom CSVs to update the web dashboard below (Power BI uses its own dataset)</li>
+                    <li><strong>Sample Data</strong> — <a href="/static/sample_data/bank_statement.csv" download>Download bank CSV</a> · <a href="/static/sample_data/internal_ledger.csv" download>Download ledger CSV</a> to test with different data</li>
+                </ul>
+            </div>
+            <div>
+                <ul>
+                    <li><strong>Option B — Web Dashboard</strong> — KPI cards, charts, and tables built with Chart.js</li>
+                    <li><strong>REST APIs</strong> — 9 endpoints with <a href="/api/docs/" target="_blank">Swagger docs</a> at /api/docs/</li>
+                    <li><strong>Bonus features</strong> — Auto-categorization, anomaly detection, SHA-256 dedup, Docker support</li>
+                </ul>
+            </div>
+        </div>
     </div>
-  </div>
-  <button class="btn-go" id="go" onclick="recon()" disabled>Run Reconciliation</button>
-</div>
 
-{% else %}
-
-<div class="info">
-  <div class="info-title">This dashboard delivers both visualization options requested in the assignment</div>
-  <div class="info-grid">
-    <div class="info-item"><span class="info-dot" style="background:#854d0e"></span><b>Option A — Power BI Report</b> — Embedded below with 3 interactive pages</div>
-    <div class="info-item"><span class="info-dot" style="background:#854d0e"></span><b>Option B — Web Dashboard</b> — KPI cards, charts, and tables built with Chart.js</div>
-    <div class="info-item"><span class="info-dot" style="background:#854d0e"></span><b>Upload</b> — Drop custom CSVs to update the web dashboard below (Power BI uses its own dataset)</div>
-    <div class="info-item"><span class="info-dot" style="background:#854d0e"></span><b>REST APIs</b> — 9 endpoints with <a href="/api/docs/" style="color:#854d0e;font-weight:700">Swagger docs</a> at /api/docs/</div>
-    <div class="info-item"><span class="info-dot" style="background:#854d0e"></span><b>Sample Data</b> — <a href="/samples/bank_statement_v2.csv" style="color:#854d0e;font-weight:700">Download bank CSV</a> · <a href="/samples/internal_ledger_v2.csv" style="color:#854d0e;font-weight:700">Download ledger CSV</a> to test with different data</div>
-    <div class="info-item"><span class="info-dot" style="background:#854d0e"></span><b>Bonus features</b> — Auto-categorization, anomaly detection, SHA-256 dedup, Docker support</div>
-  </div>
-</div>
-
-<div class="p" style="margin-bottom:28px">
-  <div class="p-title">Option A — Power BI Report</div>
-  <div style="font-size:11px;color:var(--t3);margin-bottom:12px">3-page interactive report connected via /api/export/powerbi/ — Executive Summary, Reconciliation Detail, Anomaly Detection. Use the page tabs at the bottom to navigate.</div>
-  <div style="position:relative;padding-bottom:62.25%;height:0;overflow:hidden;border-radius:8px;border:1px solid var(--b1)">
-    <iframe title="Pilgrim Finance Dashboard" style="position:absolute;top:0;left:0;width:100%;height:100%;border:0" src="https://app.powerbi.com/view?r=eyJrIjoiYzNlNzkxNTktMzNmMi00YjRjLWE1YWUtMjBiNjZiOWVhNTkwIiwidCI6ImM2ZTU0OWIzLTVmNDUtNDAzMi1hYWU5LWQ0MjQ0ZGM1YjJjNCJ9&pageName=121a99a70cc4b2a8be45" allowFullScreen="true"></iframe>
-  </div>
-</div>
-
-<div class="kpis">
-  <div class="k">
-    <div class="k-label">Total Credits</div>
-    <div class="k-val c-g" data-fmt="{{ credits|floatformat:0 }}"></div>
-    <div class="k-sub">Incoming</div>
-  </div>
-  <div class="k">
-    <div class="k-label">Total Debits</div>
-    <div class="k-val c-r" data-fmt="{{ debits|floatformat:0 }}"></div>
-    <div class="k-sub">Outgoing</div>
-  </div>
-  <div class="k">
-    <div class="k-label">Net Position</div>
-    <div class="k-val {% if net >= 0 %}c-g{% else %}c-r{% endif %}" data-fmt="{{ net|floatformat:0 }}"></div>
-    <div class="k-sub">Credits &minus; Debits</div>
-  </div>
-  <div class="k">
-    <div class="k-label">Match Rate</div>
-    <div class="k-val c-bk">{{ match_rate }}%</div>
-    <div class="k-sub">{{ matched }} matched &middot; {{ probable }} probable</div>
-  </div>
-  <div class="k">
-    <div class="k-label">Unmatched</div>
-    <div class="k-val c-am" data-fmt="{{ unmatched_amount|floatformat:0 }}"></div>
-    <div class="k-sub">{{ unmatched }} entries &middot; {{ anomaly_count }} anomalies</div>
-  </div>
-</div>
-
-<div class="grid-2">
-  <div class="p">
-    <div class="p-title">Expenses by Category</div>
-    <canvas id="c1" height="300"></canvas>
-  </div>
-  <div class="p">
-    <div class="p-title">Daily Cashflow</div>
-    <canvas id="c2" height="300"></canvas>
-  </div>
-</div>
-<div class="grid-2">
-  <div class="p">
-    <div class="p-title">Reconciliation Breakdown</div>
-    <canvas id="c3" height="250"></canvas>
-  </div>
-  <div class="p">
-    <div class="p-title">Spend Distribution</div>
-    <canvas id="c4" height="250"></canvas>
-  </div>
-</div>
-
-{% if top_unmatched %}
-<div class="tbl">
-  <div class="p-title">Unmatched Transactions</div>
-  <table>
-    <thead><tr><th>Date</th><th>Source</th><th>Narration</th><th>Category</th><th>Amount</th><th>Status</th></tr></thead>
-    <tbody>
-    {% for e in top_unmatched %}
-    <tr>
-      <td>{{ e.date|date:"d M" }}</td>
-      <td class="src">{{ e.source }}</td>
-      <td>{{ e.narration|truncatechars:40 }}</td>
-      <td style="color:var(--t3)">{{ e.category }}</td>
-      <td class="mono" style="color:var(--r)" data-fmt="{{ e.amount|floatformat:0 }}"></td>
-      <td><span class="tag tag-r">Unmatched</span></td>
-    </tr>
-    {% endfor %}
-    </tbody>
-  </table>
-</div>
-{% endif %}
-
-{% if anomalies %}
-<div class="tbl">
-  <div class="p-title">Flagged Anomalies</div>
-  <table>
-    <thead><tr><th>Date</th><th>Source</th><th>Narration</th><th>Amount</th><th>Reason</th></tr></thead>
-    <tbody>
-    {% for e in anomalies %}
-    <tr>
-      <td>{{ e.date|date:"d M" }}</td>
-      <td class="src">{{ e.source }}</td>
-      <td>{{ e.narration|truncatechars:40 }}</td>
-      <td class="mono" style="color:var(--am)" data-fmt="{{ e.amount|floatformat:0 }}"></td>
-      <td><span class="tag tag-am">{{ e.anomaly_reason|truncatechars:45 }}</span></td>
-    </tr>
-    {% endfor %}
-    </tbody>
-  </table>
-</div>
-{% endif %}
-
-
-<div class="up-wrap">
-  <div class="p-title" style="margin-bottom:4px">Upload Custom Data</div>
-  <div style="font-size:11px;color:var(--t3);margin-bottom:10px">Upload new CSVs to update the web dashboard above. Duplicates skipped automatically. <b>Need test data?</b> <a href="/samples/bank_statement_v2.csv" style="color:var(--t1);font-weight:600">Download bank CSV</a> · <a href="/samples/internal_ledger_v2.csv" style="color:var(--t1);font-weight:600">Download ledger CSV</a></div>
-  <div class="up-grid">
-    <div>
-      <div class="drop" onclick="document.getElementById('f3').click()"><div class="drop-t">bank_statement.csv</div></div>
-      <input type="file" id="f3" accept=".csv" style="display:none" onchange="up(this,'bank')">
-      <div class="drop-st" id="s3"></div>
+    <!-- Power BI Embed -->
+    <div class="card" style="padding:0; overflow:hidden; border:none; margin-bottom: 24px;">
+        <div class="pbi-wrap" style="height: 650px; padding-bottom: 0;">
+            <iframe title="Pilgrim Finance Dashboard" src="https://app.powerbi.com/view?r=eyJrIjoiYzNlNzkxNTktMzNmMi00YjRjLWE1YWUtMjBiNjZiOWVhNTkwIiwidCI6ImM2ZTU0OWIzLTVmNDUtNDAzMi1hYWU5LWQ0MjQ0ZGM1YjJjNCJ9&pageName=121a99a70cc4b2a8be45" allowFullScreen="true"></iframe>
+        </div>
     </div>
-    <div>
-      <div class="drop" onclick="document.getElementById('f4').click()"><div class="drop-t">internal_ledger.csv</div></div>
-      <input type="file" id="f4" accept=".csv" style="display:none" onchange="up(this,'ledger')">
-      <div class="drop-st" id="s4"></div>
+
+    <!-- Interactive Filter Bar -->
+    <div class="filter-bar">
+        <div class="filter-group">
+            <span class="filter-label">Source</span>
+            <select id="filter-source" class="filter-select">
+                <option value="all">All Sources</option>
+                <option value="bank">Bank Statement</option>
+                <option value="internal">Internal Ledger</option>
+            </select>
+        </div>
+        <div class="filter-group">
+            <span class="filter-label">Type</span>
+            <select id="filter-type" class="filter-select">
+                <option value="all">All Types</option>
+                <option value="credit">Credits (Incoming)</option>
+                <option value="debit">Debits (Outgoing)</option>
+            </select>
+        </div>
+        <div class="filter-group">
+            <span class="filter-label">Reconciliation Status</span>
+            <select id="filter-status" class="filter-select">
+                <option value="all">All Statuses</option>
+                <option value="matched">Matched</option>
+                <option value="probable">Probable Match</option>
+                <option value="unmatched">Unmatched</option>
+            </select>
+        </div>
+        <div class="filter-group">
+            <span class="filter-label">Month</span>
+            <select id="filter-month" class="filter-select">
+                <option value="all">All Dates</option>
+            </select>
+        </div>
+        <button class="filter-reset" onclick="resetFilters()">Reset Filters</button>
     </div>
-  </div>
-  <button class="btn-go" onclick="recon()">Re-run Reconciliation</button>
-</div>
-{% endif %}
 
-<div class="foot">
-  <a href="/api/docs/">API Documentation</a> &middot; <a href="/admin/">Admin</a> &middot; <a href="/api/export/powerbi/">Power BI Export</a>
-</div>
+    <!-- KPIs -->
+    <div class="kpi-strip">
+        <div class="kpi-card">
+            <div class="kpi-label">Total Credits</div>
+            <div class="kpi-value positive" id="kpi-credits">₹0</div>
+            <div class="kpi-sub">Total Incoming</div>
+        </div>
+        <div class="kpi-card">
+            <div class="kpi-label">Total Debits</div>
+            <div class="kpi-value negative" id="kpi-debits">₹0</div>
+            <div class="kpi-sub">Total Outgoing</div>
+        </div>
+        <div class="kpi-card">
+            <div class="kpi-label">Net Position</div>
+            <div class="kpi-value" id="kpi-net">₹0</div>
+            <div class="kpi-sub">Credits &minus; Debits</div>
+        </div>
+        <div class="kpi-card">
+            <div class="kpi-label">Match Rate</div>
+            <div class="kpi-value" id="kpi-match-rate">0%</div>
+            <div class="kpi-sub" id="kpi-match-sub">0 Matched</div>
+        </div>
+        <div class="kpi-card">
+            <div class="kpi-label">Unmatched Value</div>
+            <div class="kpi-value warning" id="kpi-unmatched-val">₹0</div>
+            <div class="kpi-sub" id="kpi-unmatched-sub">0 Entries</div>
+        </div>
+    </div>
+
+    <!-- Charts -->
+    <div class="grid grid-2">
+        <div class="card">
+            <div class="card-head">
+                <div><div class="card-title">Daily Cashflow</div><div class="card-sub">Credits vs Debits over time</div></div>
+            </div>
+            <div class="chart-wrap"><canvas id="chart-cashflow"></canvas></div>
+        </div>
+        <div class="card">
+            <div class="card-head">
+                <div><div class="card-title">Expenses by Category</div><div class="card-sub">Top spend areas</div></div>
+            </div>
+            <div class="chart-wrap"><canvas id="chart-category"></canvas></div>
+        </div>
+        <div class="card">
+            <div class="card-head">
+                <div><div class="card-title">Reconciliation Breakdown</div><div class="card-sub">Status distribution</div></div>
+            </div>
+            <div class="chart-wrap sm"><canvas id="chart-recon"></canvas></div>
+        </div>
+        <div class="card">
+            <div class="card-head">
+                <div><div class="card-title">Spend Distribution</div><div class="card-sub">Percentage by category</div></div>
+            </div>
+            <div class="chart-wrap sm"><canvas id="chart-spend-dist"></canvas></div>
+        </div>
+    </div>
+
+    <!-- Data Explorer -->
+    <div class="card full">
+        <div class="card-head">
+            <div><div class="card-title">Granular Data Explorer</div><div class="card-sub">Explore filtered ledger entries</div></div>
+            <span class="card-badge" id="table-count">0 rows</span>
+        </div>
+        <div class="table-scroll">
+            <table class="data-table" id="data-table">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Source</th>
+                        <th>Type</th>
+                        <th>Amount</th>
+                        <th>Category</th>
+                        <th>Narration</th>
+                        <th>Status</th>
+                        <th>Confidence</th>
+                    </tr>
+                </thead>
+                <tbody id="table-body">
+                    <!-- JS populated -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Upload More Section -->
+    <div class="card full">
+        <div class="card-head">
+            <div><div class="card-title">Upload & Sync</div><div class="card-sub">Add more CSV data to the engine. Duplicates skipped automatically.</div></div>
+        </div>
+        <div class="up-grid">
+            <div>
+                <div class="drop" onclick="document.getElementById('f3').click()"><div class="drop-t">bank_statement.csv</div></div>
+                <input type="file" id="f3" accept=".csv" style="display:none" onchange="up(this,'bank')">
+                <div id="s3" style="font-size:12px; margin-top:8px;"></div>
+            </div>
+            <div>
+                <div class="drop" onclick="document.getElementById('f4').click()"><div class="drop-t">internal_ledger.csv</div></div>
+                <input type="file" id="f4" accept=".csv" style="display:none" onchange="up(this,'ledger')">
+                <div id="s4" style="font-size:12px; margin-top:8px;"></div>
+            </div>
+        </div>
+        <button class="btn btn-primary" style="margin-top:16px;" onclick="recon()">Re-run Reconciliation Engine</button>
+    </div>
+
+    {% endif %}
+
 </div>
 
+<!-- JavaScript for Interactivity -->
 <script>
-const INR=n=>{const abs=Math.abs(n);const s=abs.toLocaleString('en-IN');return(n<0?'-':'')+'\u20B9'+s};
-document.querySelectorAll('[data-fmt]').forEach(el=>{
-  const raw=el.getAttribute('data-fmt').replace(/,/g,'');
-  const n=parseFloat(raw);if(!isNaN(n))el.textContent=INR(n);
-});
+    const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]')?.value || '';
+    // Format currency
+    const INR = n => { const s = Math.abs(n).toLocaleString('en-IN', {minimumFractionDigits:2, maximumFractionDigits:2}); return (n<0?'-':'') + '₹' + s; };
+    
+    // Upload logic
+    let rdy = new Set();
+    async function up(inp,t){
+        const f=inp.files[0];if(!f)return;
+        
+        let msgId;
+        if(inp.id==='f1' || inp.id==='f3') msgId='s1'; else msgId='s2';
+        const st=document.getElementById(msgId);
+        if(st) st.innerHTML='<span style="color:var(--warning-text)">Uploading...</span>';
 
-Chart.defaults.font.family="'Inter',sans-serif";
-const C=['#0a0a0a','#525252','#737373','#a3a3a3','#d4d4d4','#404040','#171717','#78716c','#57534e','#292524','#64748b','#475569','#334155','#1e293b','#94a3b8','#6b7280'];
-const gridC='#f5f5f5';
-const tickC='#a3a3a3';
+        // Auto-clear old data when uploading the first file of a new session
+        if (rdy.size === 0) {
+            if(st) st.innerHTML='<span style="color:var(--warning-text)">Clearing old data...</span>';
+            await fetch('/api/clear/',{method:'POST', headers:{'X-CSRFToken':csrfToken}});
+        }
 
-{% if has_data %}
-new Chart(document.getElementById('c1'),{type:'bar',data:{labels:{{cat_labels|safe}},datasets:[{data:{{cat_values|safe}},backgroundColor:'#0a0a0a',borderRadius:3,borderSkipped:false,barThickness:12}]},options:{indexAxis:'y',responsive:true,plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>INR(c.raw)}}},scales:{x:{grid:{color:gridC},ticks:{color:tickC,font:{size:9},callback:v=>INR(v)}},y:{grid:{display:false},ticks:{color:'#525252',font:{size:10,weight:'500'}}}}}});
+        const ep=t==='bank'?'/api/upload/bank/':'/api/upload/ledger/';
+        const fd=new FormData();fd.append('file',f);
+        
+        try{
+            if(st) st.innerHTML='<span style="color:var(--warning-text)">Uploading...</span>';
+            const r=await fetch(ep,{method:'POST',body:fd, headers:{'X-CSRFToken':csrfToken}});const d=await r.json();
+            if(r.ok){
+                if(st) st.innerHTML='<span style="color:var(--positive-text)">✓ '+d.created+' added, '+d.duplicates_skipped+' dupes skipped</span>';
+                rdy.add(t);
+                const b=document.getElementById('btn-recon');
+                if(b && rdy.size>=2) b.disabled=false;
+            }else{
+                if(st) st.innerHTML='<span style="color:var(--negative-text)">'+d.error+'</span>';
+            }
+        }catch(e){if(st) st.innerHTML='<span style="color:var(--negative-text)">Upload failed</span>';}
+    }
 
-new Chart(document.getElementById('c4'),{type:'doughnut',data:{labels:{{cat_labels|safe}},datasets:[{data:{{cat_values|safe}},backgroundColor:C.slice(0,{{cat_labels|safe}}.length),borderWidth:2,borderColor:'#fff',hoverOffset:4}]},options:{responsive:true,cutout:'65%',plugins:{legend:{position:'right',labels:{color:tickC,font:{size:9},padding:8,usePointStyle:true,pointStyleWidth:6}},tooltip:{callbacks:{label:c=>c.label+': '+INR(c.raw)}}}}});
+    async function recon(){
+        document.getElementById('header-status').textContent = 'Reconciling...';
+        try{
+            const r=await fetch('/api/reconcile/',{method:'POST', headers:{'X-CSRFToken':csrfToken}});
+            const d=await r.json();
+            if(r.ok) location.reload(); else alert(d.error);
+        }catch(e){alert('Reconciliation failed');}
+    }
 
-new Chart(document.getElementById('c2'),{type:'line',data:{labels:{{cashflow_labels|safe}},datasets:[{label:'Credits',data:{{cashflow_credits|safe}},borderColor:'#16a34a',backgroundColor:'rgba(22,163,74,.04)',fill:true,tension:.4,borderWidth:1.5,pointRadius:2,pointBackgroundColor:'#16a34a'},{label:'Debits',data:{{cashflow_debits|safe}},borderColor:'#dc2626',backgroundColor:'rgba(220,38,38,.04)',fill:true,tension:.4,borderWidth:1.5,pointRadius:2,pointBackgroundColor:'#dc2626'}]},options:{responsive:true,interaction:{intersect:false,mode:'index'},plugins:{legend:{labels:{color:tickC,font:{size:9},usePointStyle:true,padding:12}},tooltip:{callbacks:{label:c=>c.dataset.label+': '+INR(c.raw)}}},scales:{x:{grid:{color:gridC},ticks:{color:tickC,font:{size:8},maxRotation:0}},y:{grid:{color:gridC},ticks:{color:tickC,font:{size:9},callback:v=>INR(v)}}}}});
+    async function clearAllData(){
+        if(!confirm('Are you sure you want to completely erase all uploaded CSVs and ledger data? This cannot be undone.')) return;
+        document.getElementById('header-status').textContent = 'Clearing...';
+        try{
+            const r=await fetch('/api/clear/',{method:'POST', headers:{'X-CSRFToken':csrfToken}});
+            if(r.ok) location.reload(); else alert('Failed to clear data');
+        }catch(e){alert('Failed to clear data');}
+    }
 
-new Chart(document.getElementById('c3'),{type:'bar',data:{labels:{{recon_labels|safe}},datasets:[{data:{{recon_values|safe}},backgroundColor:['#16a34a','#d97706','#dc2626','#2563eb'],borderRadius:3,borderSkipped:false,barThickness:24}]},options:{responsive:true,plugins:{legend:{display:false}},scales:{x:{grid:{display:false},ticks:{color:'#525252',font:{size:9,weight:'600'}}},y:{grid:{color:gridC},ticks:{color:tickC,font:{size:9},stepSize:1}}}}});
-{% endif %}
+    // Chart colors
+    Chart.defaults.font.family = "'Inter', sans-serif";
+    Chart.defaults.color = "#6E6E73";
+    const colors = {
+        primary: '#1D1D1F',
+        positive: '#34C759',
+        negative: '#FF3B30',
+        warning: '#FF9F0A',
+        blue: '#0071E3',
+        grid: '#E5E5EA'
+    };
+    const pieColors = ['#1D1D1F', '#0071E3', '#34C759', '#FF9F0A', '#FF3B30', '#8E8E93', '#5856D6', '#AF52DE'];
 
-let rdy=new Set();
-async function up(inp,t){
-  const f=inp.files[0];if(!f)return;
-  const ep=t==='bank'?'/api/upload/bank/':'/api/upload/ledger/';
-  const ids=t==='bank'?['s1','s3']:['s2','s4'];
-  const st=ids.map(id=>document.getElementById(id)).find(el=>el);
-  const fd=new FormData();fd.append('file',f);
-  if(st)st.innerHTML='<span style="color:var(--am)">Uploading...</span>';
-  try{
-    const r=await fetch(ep,{method:'POST',body:fd});const d=await r.json();
-    if(r.ok){if(st)st.innerHTML='<span style="color:var(--g)">'+d.created+' added, '+d.duplicates_skipped+' dupes skipped</span>';rdy.add(t);const b=document.getElementById('go');if(b&&rdy.size>=2)b.disabled=false;}
-    else{if(st)st.innerHTML='<span style="color:var(--r)">'+d.error+'</span>';}
-  }catch(e){if(st)st.innerHTML='<span style="color:var(--r)">Upload failed</span>';}
-}
-async function recon(){
-  try{const r=await fetch('/api/reconcile/',{method:'POST'});const d=await r.json();
-    if(r.ok){location.reload();}else alert(d.error);
-  }catch(e){alert('Failed');}
-}
+    {% if has_data %}
+    let rawData = [];
+    let charts = {};
+
+    // Initialize Dashboard
+    async function initDashboard() {
+        document.getElementById('header-status').textContent = 'Fetching data...';
+        try {
+            const res = await fetch('/api/ledger/');
+            const json = await res.json();
+            rawData = json.results;
+            
+            // Populate Month Dropdown
+            const months = new Set();
+            rawData.forEach(r => months.add(r.date.substring(0,7))); // YYYY-MM
+            const monthSelect = document.getElementById('filter-month');
+            Array.from(months).sort().reverse().forEach(m => {
+                const opt = document.createElement('option');
+                opt.value = m;
+                opt.textContent = m;
+                monthSelect.appendChild(opt);
+            });
+
+            // Bind filters
+            document.querySelectorAll('.filter-select').forEach(el => el.addEventListener('change', renderAll));
+            
+            // Render
+            document.getElementById('header-status').textContent = 'Live';
+            document.getElementById('status-dot').style.animation = 'none';
+            renderAll();
+        } catch(e) {
+            console.error(e);
+            document.getElementById('header-status').textContent = 'Error loading data';
+        }
+    }
+
+    function resetFilters() {
+        document.querySelectorAll('.filter-select').forEach(el => el.value = 'all');
+        renderAll();
+    }
+
+    function renderAll() {
+        // 1. Filter Data
+        const fSource = document.getElementById('filter-source').value;
+        const fType = document.getElementById('filter-type').value;
+        const fStatus = document.getElementById('filter-status').value;
+        const fMonth = document.getElementById('filter-month').value;
+
+        const data = rawData.filter(r => {
+            if (fSource !== 'all' && r.source !== fSource) return false;
+            if (fType !== 'all' && r.type !== fType) return false;
+            if (fStatus !== 'all' && r.reconciliation_status !== fStatus) return false;
+            if (fMonth !== 'all' && !r.date.startsWith(fMonth)) return false;
+            return true;
+        });
+
+        // 2. Compute KPIs
+        let cred = 0, deb = 0, matched = 0, prob = 0, unmatch = 0, unmatchVal = 0;
+        data.forEach(r => {
+            const amt = parseFloat(r.amount);
+            if (r.type === 'credit') cred += amt; else deb += amt;
+            if (r.reconciliation_status === 'matched') matched++;
+            else if (r.reconciliation_status === 'probable') prob++;
+            else { unmatch++; unmatchVal += amt; }
+        });
+
+        document.getElementById('kpi-credits').textContent = INR(cred);
+        document.getElementById('kpi-debits').textContent = INR(deb);
+        const net = cred - deb;
+        const kn = document.getElementById('kpi-net');
+        kn.textContent = INR(net);
+        kn.className = 'kpi-value ' + (net >= 0 ? 'positive' : 'negative');
+        
+        const total = data.length || 1;
+        document.getElementById('kpi-match-rate').textContent = ((matched + prob)/total*100).toFixed(1) + '%';
+        document.getElementById('kpi-match-sub').textContent = matched + ' Matched, ' + prob + ' Probable';
+        document.getElementById('kpi-unmatched-val').textContent = INR(unmatchVal);
+        document.getElementById('kpi-unmatched-sub').textContent = unmatch + ' Entries';
+
+        // 3. Update Table
+        document.getElementById('table-count').textContent = data.length + ' rows';
+        const tbody = document.getElementById('table-body');
+        tbody.innerHTML = '';
+        // render top 100 max for performance
+        data.slice(0, 100).forEach(r => {
+            const tr = document.createElement('tr');
+            
+            let statusBadge = '';
+            if(r.reconciliation_status === 'matched') statusBadge = `<span class="badge badge-positive">Matched</span>`;
+            else if(r.reconciliation_status === 'probable') statusBadge = `<span class="badge badge-warning">Probable</span>`;
+            else statusBadge = `<span class="badge badge-negative">Unmatched</span>`;
+
+            tr.innerHTML = `
+                <td>${r.date}</td>
+                <td style="text-transform:uppercase; font-size:0.7rem; font-weight:700; color:var(--text-tertiary)">${r.source}</td>
+                <td><span class="badge ${r.type==='credit'?'badge-positive':'badge-negative'}">${r.type}</span></td>
+                <td>${INR(parseFloat(r.amount))}</td>
+                <td style="color:var(--text-secondary)">${r.category || '-'}</td>
+                <td style="max-width:300px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" title="${r.narration}">${r.narration}</td>
+                <td>${statusBadge}</td>
+                <td>${r.confidence_score ? r.confidence_score.toFixed(0)+'%' : '-'}</td>
+            `;
+            tbody.appendChild(tr);
+        });
+
+        // 4. Update Charts
+        updateCharts(data);
+    }
+
+    function updateCharts(data) {
+        // Prepare Category Data (Debits only)
+        const cats = {};
+        data.filter(r => r.type === 'debit').forEach(r => {
+            cats[r.category] = (cats[r.category] || 0) + parseFloat(r.amount);
+        });
+        const sortedCats = Object.entries(cats).sort((a,b)=>b[1]-a[1]).slice(0,10);
+        
+        // Prepare Cashflow Data
+        const dates = {};
+        data.forEach(r => {
+            if(!dates[r.date]) dates[r.date] = {c:0, d:0};
+            if(r.type==='credit') dates[r.date].c += parseFloat(r.amount);
+            else dates[r.date].d += parseFloat(r.amount);
+        });
+        const sortedDates = Object.keys(dates).sort();
+
+        // Prepare Recon Breakdown
+        const reconCount = { 'Matched':0, 'Probable':0, 'Unmatched':0 };
+        data.forEach(r => {
+            if(r.reconciliation_status==='matched') reconCount['Matched']++;
+            else if(r.reconciliation_status==='probable') reconCount['Probable']++;
+            else reconCount['Unmatched']++;
+        });
+
+        const ctxOpts = { responsive: true, maintainAspectRatio: false };
+
+        // Chart 1: Category Bar
+        if(charts.cat) charts.cat.destroy();
+        charts.cat = new Chart(document.getElementById('chart-category'), {
+            type: 'bar',
+            data: {
+                labels: sortedCats.map(c=>c[0]),
+                datasets: [{
+                    data: sortedCats.map(c=>c[1]),
+                    backgroundColor: colors.primary, borderRadius: 4, barThickness: 16
+                }]
+            },
+            options: { ...ctxOpts, indexAxis: 'y', plugins: { legend: {display:false}, tooltip: {callbacks: {label: c=>INR(c.raw)}}}, scales: { x: { grid: {color: colors.grid}, ticks:{callback: v=>INR(v)} }, y:{ grid:{display:false} } } }
+        });
+
+        // Chart 2: Cashflow
+        if(charts.cash) charts.cash.destroy();
+        charts.cash = new Chart(document.getElementById('chart-cashflow'), {
+            type: 'line',
+            data: {
+                labels: sortedDates,
+                datasets: [
+                    { label: 'Credits', data: sortedDates.map(d=>dates[d].c), borderColor: colors.positive, backgroundColor: 'rgba(52,199,89,0.1)', fill: true, tension: 0.4 },
+                    { label: 'Debits', data: sortedDates.map(d=>dates[d].d), borderColor: colors.negative, backgroundColor: 'rgba(255,59,48,0.1)', fill: true, tension: 0.4 }
+                ]
+            },
+            options: { ...ctxOpts, interaction: {intersect:false, mode:'index'}, plugins: { tooltip: {callbacks: {label: c=>c.dataset.label+': '+INR(c.raw)}}}, scales: { x: { grid: {color: colors.grid}}, y: { grid: {color: colors.grid}, ticks:{callback: v=>INR(v)} } } }
+        });
+
+        // Chart 3: Recon Breakdown
+        if(charts.recon) charts.recon.destroy();
+        charts.recon = new Chart(document.getElementById('chart-recon'), {
+            type: 'bar',
+            data: {
+                labels: Object.keys(reconCount),
+                datasets: [{ data: Object.values(reconCount), backgroundColor: [colors.positive, colors.warning, colors.negative], borderRadius: 4 }]
+            },
+            options: { ...ctxOpts, plugins: {legend: {display:false}}, scales: { x: {grid:{display:false}}, y: {grid:{color:colors.grid}} } }
+        });
+
+        // Chart 4: Spend Dist
+        if(charts.dist) charts.dist.destroy();
+        charts.dist = new Chart(document.getElementById('chart-spend-dist'), {
+            type: 'doughnut',
+            data: {
+                labels: sortedCats.map(c=>c[0]),
+                datasets: [{ data: sortedCats.map(c=>c[1]), backgroundColor: pieColors, borderWidth: 2 }]
+            },
+            options: { ...ctxOpts, cutout: '65%', plugins: { legend: {position: 'right', labels:{boxWidth:12}}, tooltip: {callbacks: {label: c=>c.label+': '+INR(c.raw)}} } }
+        });
+    }
+
+    // Start
+    initDashboard();
+    {% endif %}
+
 </script>
 </body>
 </html>
