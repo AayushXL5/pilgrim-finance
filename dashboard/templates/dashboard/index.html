@@ -429,7 +429,10 @@ body { font-family: var(--font); background: var(--bg-section); color: var(--tex
         try{
             const r=await fetch('/api/reconcile/',{method:'POST', headers:{'X-CSRFToken':csrfToken}});
             const d=await r.json();
-            if(r.ok) location.reload(); else alert(d.error);
+            if(r.ok) {
+                sessionStorage.setItem('reconSuccess', 'true');
+                location.reload();
+            } else alert(d.error);
         }catch(e){alert('Reconciliation failed');}
     }
 
@@ -440,6 +443,16 @@ body { font-family: var(--font); background: var(--bg-section); color: var(--tex
             const r=await fetch('/api/clear/',{method:'POST', headers:{'X-CSRFToken':csrfToken}});
             if(r.ok) location.reload(); else alert('Failed to clear data');
         }catch(e){alert('Failed to clear data');}
+    }
+
+    // Show success banner if just reconciled
+    if(sessionStorage.getItem('reconSuccess')){
+        sessionStorage.removeItem('reconSuccess');
+        const banner = document.createElement('div');
+        banner.style.cssText = "background:var(--positive-bg); color:#2E7D32; padding:12px; text-align:center; font-weight:600; border-bottom:1px solid #A5D6A7; position:sticky; top:0; z-index:9999;";
+        banner.innerHTML = "✨ Success! New data has been uploaded and successfully reconciled.";
+        document.body.prepend(banner);
+        setTimeout(() => { banner.style.transition = 'opacity 0.5s'; banner.style.opacity = '0'; setTimeout(()=>banner.remove(), 500); }, 4000);
     }
 
     // Chart colors
